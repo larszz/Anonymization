@@ -40,7 +40,7 @@ def readConfig():
 		print()
 		h.printList(entryList)
 
-	print(newConfig.to_string())
+	print(newConfig)
 
 	return newConfig
 

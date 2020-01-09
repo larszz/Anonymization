@@ -1,25 +1,26 @@
+import logging as log
 
 
-
-def printList(list, headline = '', seperator = ', '):
+def printList(list, headline='', seperator=', '):
 	print(listToString(list, headline, seperator))
 
-def listToString(list, headline = '', seperator = ', ', headlineseperator = '\n'):
+
+def listToString(list, headline='', seperator=', ', headlineseperator='\n'):
 	output = ''
 	# add headline
-	if(headline != ''):
+	if (headline != ''):
 		output += str(headline) + headlineseperator
 	# add lines
 	for i in list:
 		output += (str(i)) + seperator
 	# remove last seperator
-	if(seperator != '\n'):
+	if (seperator != '\n'):
 		output = output.rstrip(str(seperator))
 
 	return output
 
 
-def printList2D(list, headline = '', seperator = ',\t'):
+def printList2D(list, headline='', seperator=',\t'):
 	for x in list:
 		line = ""
 		for y in list:
@@ -28,9 +29,21 @@ def printList2D(list, headline = '', seperator = ',\t'):
 		line = line.rstrip(seperator)
 		print(line)
 
-def stripList(list):
-	newList = []
-	for l in list:
-		newList.append(str(l).strip())
 
-	return newList
+def stripList(list):
+	new_list = []
+	for l in list:
+		new_list.append(str(l).strip())
+	return new_list
+
+
+def dictToString(dict, headline=''):
+	try:
+		output = ""
+		if headline != '':
+			output += headline + '\n'
+		for key in dict:
+			output += '{0}:\t{1}\n'.format(str(key), str(dict[key]))
+		output += 3 * '\n'
+	except Exception as ex:
+		log.warning('An Exception occured!')

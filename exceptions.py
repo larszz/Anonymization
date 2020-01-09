@@ -1,6 +1,12 @@
 class Messages:
 	NONETYPEERROR = '"{0}" is NoneType!'
 	COLUMNNAMEERROR = 'Column names could not be read from file {0}'
+	KEYERROR = 'Key {0} already used! Skipping key.'
+
+
+
+	class Debug:
+		VALUE_ADDED_TO_KEY = 'Value "{1}" added to Key "{0}".'
 
 
 class NoneTypeError(Exception):
