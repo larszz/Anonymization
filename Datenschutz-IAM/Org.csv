@@ -1,0 +1,103 @@
+ID;Name;ParentID
+55;Retail_Inc;110
+56;Shops;103
+57;Operations and Finance;117
+58;Quality Control;57
+59;Regulations;124
+60;Advertising;81
+61;Shop-41;56
+62;Shop-29;56
+63;Client Services;146
+64;Shop-21;56
+65;Strategy;81
+66;Shop-27;56
+67;Social;153
+68;Cinesoft;110
+69;Shop-23;56
+70;Customer Support;57
+71;Shop-101;56
+72;Shop-61;56
+73;Shop-63;56
+74;Data Warehousing;146
+75;Shop-65;56
+76;Shop-66;56
+77;Shop-62;56
+78;Shop-100;56
+79;Coaching;83
+80;Electronics;152
+81;Marketing;117
+82;Shop-64;56
+83;Training;151
+84;Shop-108;56
+85;External_Support;153
+86;Shop-102;56
+87;Shop-104;56
+88;Shop-107;56
+89;Clothing;152
+90;Shop-106;56
+91;Shop-103;56
+92;Furniture;152
+93;Shop-105;56
+94;Buying;103
+95;Shop-31;56
+96;Shop-30;56
+97;Shop-32;56
+98;Shop-34;56
+99;Shop-3;56
+100;Shop-6;56
+101;Shop-39;56
+102;Shop-37;56
+103;Merchandising;117
+104;Retail Shops;65
+105;Communication;127
+106;Shop-35;56
+107;Shop-2;56
+108;Shop-1;56
+109;Help Desk;146
+110;Partner Companies;117
+111;Treasury;124
+112;Shop-68;56
+113;Shop-69;56
+114;Inventory Control;103
+115;Payroll;127
+116;Recruiting;151
+117;Demo_Company;
+118;Shop-13;56
+119;Security;146
+120;Infrastructure;146
+121;Living;152
+122;Shop-28;56
+123;Leadership;83
+124;Finance;57
+125;Shop-40;56
+126;eCommerce;65
+127;Administration;151
+128;Shop-20;56
+129;Shop-26;56
+130;Controlling;124
+131;Shop-24;56
+132;Shop-22;56
+133;Credit;124
+134;Shop-57;56
+135;Shop-55;56
+136;Print Media;65
+137;Mobile;153
+138;Shop-58;56
+139;Shop-47;56
+140;Shop-48;56
+141;Shop-44;56
+142;Shop-49;56
+143;Shop-42;56
+144;Shop-45;56
+145;Shop-43;56
+146;Information Technology;117
+148;Shop-53;56
+149;Shop-51;56
+150;Shop-52;56
+151;Human Resources;117
+152;Planning;103
+153;Online;81
+154;Operations;57
+155;Sports;152
+156;Shop-18;56
+157;Shop-19;56
