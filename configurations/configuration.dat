@@ -1,4 +1,5 @@
 directory:  D:\Projects\Anonymization\Datenschutz-IAM
+output: D:\Projects\Anonymization\Datenschutz-IAM\Output
 table:  table1
 plain:  row1, row3
 anonym: row2

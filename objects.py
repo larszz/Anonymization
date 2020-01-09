@@ -6,6 +6,7 @@ INITIAL_VALUE = -1
 
 class Configuration:
     file_directories = INITIAL_VALUE
+    output_directory = INITIAL_VALUE
     tablenames = INITIAL_VALUE
     plainrows = INITIAL_VALUE
     anonymrows = INITIAL_VALUE
@@ -34,6 +35,10 @@ class Configuration:
         if key == n.conf.DIRECTORY:
             self.file_directories = value
 
+        # output directory
+        if key == n.conf.OUTPUTDIRECTORY:
+            self.output_directory = value[0]
+
         # tablename
         elif key == n.conf.TABLE:
             self.tablenames = value
@@ -57,11 +62,7 @@ class Configuration:
 
 
     def __init__(self):
-        file_directory = ""
-        tablename = ""
-        plainrows = []
-        anonymrows = []
-        pseudonymrows = []
+        pass
 
 
     def to_string(self):
@@ -72,6 +73,7 @@ class Configuration:
         output += "CONFIGURATION" + newline
 
         output += h.listToString(self.file_directories, n.conf.DIRECTORY, headlineseperator=':\t') + newline
+        output += n.conf.OUTPUTDIRECTORY + ":\t" + self.output_directory + newline
         output += h.listToString(self.tablenames, n.conf.TABLE, headlineseperator=':\t') + newline
         output += h.listToString(self.plainrows, n.conf.PLAIN, headlineseperator=':\t') + newline
         output += h.listToString(self.anonymrows, n.conf.ANONYM, headlineseperator=':\t') + newline
