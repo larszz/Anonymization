@@ -10,31 +10,47 @@ plainrows = []
 anonymrows = []
 pseudonymrows = []
 
+
 def readConfig():
-    newConfig = o.Configuration()
+	newConfig = o.Configuration()
 
-    # read file
-    with open(CONFIGURATION_PATH, 'r') as lines:
+	# read file
+	with open(CONFIGURATION_PATH, 'r') as lines:
 
-        entries = []
+		entryList = []
 
-        for l in lines:
-            entries.append(l.split(':'))
+		for l in lines:
+			entryList.append(l.split(':'))
 
-        
+		# iterate over every entry
+		for e in entryList:
+			if (len(e) != 2):
+				return -1
 
-        h.printList(entries)
-        for x in range(len(entries)):
-            for y in range(len(entries[x])):
-                entries[x][y] = str(entries[x][y]).strip()
+			confKey = str(e[0]).strip()
+			confValues = getValues(e[1])
 
-        print()
-        print()
-        h.printList(entries)
+			print('Key: ' + str(confKey))
+			h.printList(confValues, 'Values:', ',')
 
-        pass
+		print()
+		print()
+		h.printList(entryList)
 
-    pass
+		pass
+
+	pass
+
+
+# extracts and strips values
+def getValues(valueString):
+	values = str(valueString).split(',')
+	#h.printList(values, 'Before values:')
+	values = h.stripList(values)
+	#h.printList(values, 'Stripped values:')
+	print()
+	print()
+	return values
 
 
 readConfig()
