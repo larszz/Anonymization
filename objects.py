@@ -1,5 +1,5 @@
 import helper as h
-import names as n
+import values as v
 import exceptions as ex
 
 INITIAL_VALUE = -1
@@ -32,27 +32,27 @@ class Configuration:
         # set configuration
 
         # filedirectory
-        if key == n.conf.DIRECTORY:
+        if key == v.conf.DIRECTORY:
             self.file_directories = value
 
         # output directory
-        if key == n.conf.OUTPUTDIRECTORY:
+        if key == v.conf.OUTPUTDIRECTORY:
             self.output_directory = value[0]
 
         # tablename
-        elif key == n.conf.TABLE:
+        elif key == v.conf.TABLE:
             self.tablenames = value
 
         # plainrows
-        elif key == n.conf.PLAIN:
+        elif key == v.conf.PLAIN:
             self.plainrows = value
 
         # anonym
-        elif key == n.conf.ANONYM:
+        elif key == v.conf.ANONYM:
             self.anonymrows = value
 
         # pseudonym
-        elif key == n.conf.PSEUDONYM:
+        elif key == v.conf.PSEUDONYM:
             self.pseudonymrows = value
 
 
@@ -72,12 +72,12 @@ class Configuration:
 
         output += "CONFIGURATION" + newline
 
-        output += h.listToString(self.file_directories, n.conf.DIRECTORY, headlineseperator=':\t') + newline
-        output += n.conf.OUTPUTDIRECTORY + ":\t" + self.output_directory + newline
-        output += h.listToString(self.tablenames, n.conf.TABLE, headlineseperator=':\t') + newline
-        output += h.listToString(self.plainrows, n.conf.PLAIN, headlineseperator=':\t') + newline
-        output += h.listToString(self.anonymrows, n.conf.ANONYM, headlineseperator=':\t') + newline
-        output += h.listToString(self.pseudonymrows, n.conf.PSEUDONYM, headlineseperator=':\t') + newline
+        output += h.listToString(self.file_directories, v.conf.DIRECTORY, headlineseperator=':\t') + newline
+        output += v.conf.OUTPUTDIRECTORY + ":\t" + self.output_directory + newline
+        output += h.listToString(self.tablenames, v.conf.TABLE, headlineseperator=':\t') + newline
+        output += h.listToString(self.plainrows, v.conf.PLAIN, headlineseperator=':\t') + newline
+        output += h.listToString(self.anonymrows, v.conf.ANONYM, headlineseperator=':\t') + newline
+        output += h.listToString(self.pseudonymrows, v.conf.PSEUDONYM, headlineseperator=':\t') + newline
 
         output += 3*newline
 

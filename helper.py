@@ -2,7 +2,7 @@
 
 
 def printList(list, headline = '', seperator = ', '):
-	print(listToString(list, seperator))
+	print(listToString(list, headline, seperator))
 
 def listToString(list, headline = '', seperator = ', ', headlineseperator = '\n'):
 	output = ''

@@ -1,6 +1,7 @@
 import os
 import objects as o
 import helper as h
+import FileReader as fr
 
 CONFIGURATION_PATH = "configurations/configuration.dat"
 
@@ -41,7 +42,7 @@ def readConfig():
 
 	print(newConfig.to_string())
 
-	pass
+	return newConfig
 
 
 # extracts and strips values
@@ -55,4 +56,5 @@ def getConfigValues(valueString):
 	return values
 
 
-readConfig()
+conf = readConfig()
+fr.readFile(conf)
