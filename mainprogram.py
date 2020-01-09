@@ -20,7 +20,7 @@ def readConfig():
 		entryList = []
 
 		for l in lines:
-			entryList.append(l.split(':'))
+			entryList.append(l.split(':', 1))
 
 		# iterate over every entry
 		for e in entryList:
@@ -28,7 +28,9 @@ def readConfig():
 				return -1
 
 			confKey = str(e[0]).strip()
-			confValues = getValues(e[1])
+			confValues = getConfigValues(e[1])
+
+			newConfig.setConfigurationValue(confKey, confValues)
 
 			print('Key: ' + str(confKey))
 			h.printList(confValues, 'Values:', ',')
@@ -37,17 +39,17 @@ def readConfig():
 		print()
 		h.printList(entryList)
 
-		pass
+	print(newConfig.to_string())
 
 	pass
 
 
 # extracts and strips values
-def getValues(valueString):
+def getConfigValues(valueString):
 	values = str(valueString).split(',')
-	#h.printList(values, 'Before values:')
+	# h.printList(values, 'Before values:')
 	values = h.stripList(values)
-	#h.printList(values, 'Stripped values:')
+	# h.printList(values, 'Stripped values:')
 	print()
 	print()
 	return values

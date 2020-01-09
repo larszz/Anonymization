@@ -1,18 +1,22 @@
 
 
 
-def printList(list, headline = '', seperator = '\n'):
-	output = ''
-	if(headline != ''):
-		output += str(headline) + '\n'
+def printList(list, headline = '', seperator = ', '):
+	print(listToString(list, seperator))
 
+def listToString(list, headline = '', seperator = ', ', headlineseperator = '\n'):
+	output = ''
+	# add headline
+	if(headline != ''):
+		output += str(headline) + headlineseperator
+	# add lines
 	for i in list:
 		output += (str(i)) + seperator
-
+	# remove last seperator
 	if(seperator != '\n'):
 		output = output.rstrip(str(seperator))
 
-	print(output)
+	return output
 
 
 def printList2D(list, headline = '', seperator = ',\t'):

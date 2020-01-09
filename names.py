@@ -1,5 +1,5 @@
 
-class Configuration:
+class conf:
     DIRECTORY = 'directory'
     TABLE = 'table'
     PLAIN = 'plain'
