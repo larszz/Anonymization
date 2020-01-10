@@ -81,9 +81,9 @@ class Configuration:
 
 
 class DataSet:
-	values = {}
+	values = None
 
-	def addToDict(self, key, value):
+	def add_to_values(self, key, value):
 		if key in self.values:
 			log.warning(ex.Messages.KEYERROR.format(key))
 			return
@@ -98,6 +98,7 @@ class DataSet:
 	def pseudonymize(self, columnnames):
 		pass
 
+	# tries to split a given value string into multiple values, depending on the set secondary delimiters
 	@staticmethod
 	def extractEntries(valuestring):
 		for delim in v.delimiters.csv.SECONDARIES:
@@ -111,15 +112,84 @@ class DataSet:
 		return [valuestring]
 
 	def __str__(self):
+		"""
 		nl = '\n'
 
 		output = ""
-		output += 'Dataset' + nl
+		# output += 'Dataset' + nl
 		for v in self.values:
 			output += '{0}:\t{1}\n'.format(str(v), self.values[v])
 
 		output += 2 * nl
-		return output
+		return output"""
+		return self.to_compact_string()
 
 	def __init__(self):
-		pass
+		self.values = {}
+
+	def to_compact_string(self):
+		output = ""
+		for v in self.values:
+			output += f'{str(self.values[v])},\t'
+		return output
+
+
+class TableData:
+	filename = None
+	columnnames = None
+	datasets = None
+
+	def __init__(self, filename):
+		self.datasets = []
+		self.filename = filename
+
+	def set_columnnames(self, columnnames):
+		if not (self.columnnames is None):
+			log.error(ex.Messages.ALREADYSETERROR.format('Columnnames'))
+			return -1
+		self.columnnames = columnnames
+
+	def set_filename(self, filename):
+		if not (self.filename is None):
+			log.error(ex.Messages.ALREADYSETERROR.format('Filename'))
+			return -1
+
+		self.filename = filename
+
+	def add_dataset(self, dataset):
+		self.datasets.append(dataset)
+
+	def add_data(self, data):
+		if (self.columnnames is None):
+			log.error(ex.Messages.NONETYPEERROR.format('Columnnames'))
+			return -1
+
+		if (data is None):
+			log.error(ex.Messages.NONETYPEERROR.format('Data'))
+			return -1
+
+		if not isinstance(data, list):
+			log.error(ex.Messages.INSTANCEERROR.format('Data', 'List'))
+			return -1
+
+		for idxRow in range(len(data)):
+			dataset = DataSet()
+			for idxCol in range(len(data[idxRow])):
+				try:
+					dataset.add_to_values(self.columnnames[idxCol], data[idxRow][idxCol])
+				except IndexError as ie:
+					log.warning('Error: {0}\nidxRow: {1}\tidxCol: {2}'.format(ie.message, str(idxRow), str(idxCol)))
+					continue
+
+			self.add_dataset(dataset)
+
+		return 1
+
+	def __str__(self):
+		output = ""
+		output += f"Filename: {str(self.filename)}\n"
+		output += h.listToString(self.columnnames, 'Column names') + '\n'
+
+		for d in self.datasets:
+			output += str(d) + '\n'
+		return str(output)

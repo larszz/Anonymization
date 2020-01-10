@@ -33,13 +33,6 @@ def readConfig():
 
 			newConfig.setConfigurationValue(confKey, confValues)
 
-			print('Key: ' + str(confKey))
-			h.printList(confValues, 'Values:', ',')
-
-		print()
-		print()
-		h.printList(entryList)
-
 	print(newConfig)
 
 	return newConfig
@@ -48,11 +41,7 @@ def readConfig():
 # extracts and strips values
 def getConfigValues(valueString):
 	values = str(valueString).split(',')
-	# h.printList(values, 'Before values:')
 	values = h.stripList(values)
-	# h.printList(values, 'Stripped values:')
-	print()
-	print()
 	return values
 
 

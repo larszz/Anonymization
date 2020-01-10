@@ -11,8 +11,10 @@ log.basicConfig(format='%(asctime)s %(message)s')
 
 
 def readFile(configuration):
+	tables = []
+
 	# check object types
-	if (not isinstance(configuration, o.Configuration)):
+	if not isinstance(configuration, o.Configuration):
 		return -1
 
 	# iterate over given directories
@@ -22,7 +24,7 @@ def readFile(configuration):
 		files = os.scandir(directory)
 		for filename in files:
 			# exclude sub directories from reading
-			if (not (os.path.isfile(os.path.join(directory, filename)))):
+			if not (os.path.isfile(os.path.join(directory, filename))):
 				continue
 
 			log.info("Filename:\t{0}".format(str(directory)))
@@ -30,29 +32,32 @@ def readFile(configuration):
 			with open(filename, 'r') as file:
 				csv_reader = csv.reader(file, delimiter=v.delimiters.csv.PRIMARY, quotechar=v.delimiters.csv.QUOTECHAR)
 
-				columnNames = ""
+				tabledata = o.TableData(filename)
 				i = 0
 				try:
-					for row in csv_reader:
+					rows = extractLines(csv_reader)
 
-						# read column names
-						if i == 0:
-							columnNames = getColumnNames(row)
-							if columnNames is None:
-								raise ex.ColumnNameError(filename)
-							i += 1
-							continue
+					# set the column names into tabledata object
+					tabledata.set_columnnames(rows[0])
 
-						# print(h.listToString(row))
+					# set the rest of the data
+					if tabledata.add_data(rows[1:]) != 1:
+						log.error(ex.Messages.DATANOTSETERROR)
+
+					# add tables to the input data
+					tables.append(tabledata)
+
+
 
 
 				except ex.ColumnNameError as cne:
 					log.warning(cne.message)
 					continue
 
+	for t in tables:
+		print(t)
 
-
-			pass
+	return tables
 
 
 def getColumnNames(firstrow):
@@ -63,3 +68,10 @@ def getColumnNames(firstrow):
 		return columns
 	except:
 		return None
+
+
+def extractLines(reader):
+	rows = []
+	for r in reader:
+		rows.append(r)
+	return rows
