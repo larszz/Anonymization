@@ -58,6 +58,8 @@ def readFile(configuration):
 def getColumnNames(firstrow):
 	try:
 		columns: List[str] = str(firstrow).split(v.delimiters.csv.PRIMARY)
+		for x in range(len(columns)):
+			columns[x] = str(columns[x]).strip()
 		return columns
 	except:
 		return None
