@@ -8,6 +8,8 @@ class Messages:
 
 
 
+
+
 	class Debug:
 		VALUE_ADDED_TO_KEY = 'Value "{1}" added to Key "{0}".'
 
@@ -19,5 +21,6 @@ class NoneTypeError(Exception):
 
 
 class ColumnNameError(Exception):
+
 	def __init__(self, filename):
 		self.message = Messages.COLUMNNAMEERROR.format(str(filename))
