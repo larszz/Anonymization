@@ -15,6 +15,8 @@ class Configuration:
 	anonymrows = INITIAL_VALUE
 	pseudonymrows = INITIAL_VALUE
 
+
+
 	# sets a configuration
 	# ignores, if a configuration value is already set
 	# returns 1 if setting worked
@@ -59,8 +61,12 @@ class Configuration:
 
 		return 1
 
+
+
 	def __init__(self):
 		pass
+
+
 
 	def __str__(self):
 		newline = '\n'
@@ -84,20 +90,43 @@ class Configuration:
 class DataSet:
 	values = None
 
+
+
 	def add_to_values(self, key, value):
 		if key in self.values:
 			log.warning(ex.Messages.KEYERROR.format(key))
 			return
 
-		self.values[str(key)] = self.extractEntries(value)
+		self.values[str(key)] = DataSet.extractEntries(value)
 		log.debug(ex.Messages.Debug.VALUE_ADDED_TO_KEY.format(key, value))
 		pass
 
-	def anonymize(self, columnnames):
-		pass
 
-	def pseudonymize(self, columnnames):
-		pass
+
+	def change_field_value(self, key, value: str = None, pattern: str = None):
+		# change the value of a field to given value
+		if value is not None:
+			self.values[key] = value
+			return
+
+		# change the value of a field by a given pattern
+		if pattern is not None:
+			self.values[key] = DataSet.get_pattern_value(self.values[key], pattern)
+			return
+
+
+
+	def combine_fields(self, keys, value: str = None, newfieldname: str = None):
+		# delete the values corresponding to the given keys from the dict
+		for k in keys:
+			self.values.pop(k)
+
+		if newfieldname is None:
+			newfieldname = DataSet.get_new_fieldname(keys)
+
+		self.values[newfieldname] = value
+
+
 
 	# tries to split a given value string into multiple values, depending on the set secondary delimiters
 	@staticmethod
@@ -112,15 +141,36 @@ class DataSet:
 		# if entry could not be split, return the given valuestring as list
 		return [valuestring]
 
+
+
 	def __str__(self):
 		output = ""
 		for v in self.values:
 			output += f'{str(self.values[v])},\t'
 		return output
 
+
+
 	def __init__(self):
 		self.values = {}
 
+
+
+	@staticmethod
+	def get_pattern_value(value, pattern):
+		# TODO
+		return value
+
+
+
+	@staticmethod
+	def get_new_fieldname(keys):
+		separator = '_'
+		output = ""
+		for k in keys:
+			output += str(k) + separator
+		output = output.rstrip(separator)
+		return output
 
 
 class TableData:
@@ -128,15 +178,21 @@ class TableData:
 	columnnames = None
 	datasets = None
 
+
+
 	def __init__(self, filename):
 		self.datasets = []
 		self.filename = filename
+
+
 
 	def set_columnnames(self, columnnames):
 		if not (self.columnnames is None):
 			log.error(ex.Messages.ALREADYSETERROR.format('Columnnames'))
 			return -1
 		self.columnnames = columnnames
+
+
 
 	def set_filename(self, filename):
 		if not (self.filename is None):
@@ -145,8 +201,12 @@ class TableData:
 
 		self.filename = filename
 
+
+
 	def add_dataset(self, dataset):
 		self.datasets.append(dataset)
+
+
 
 	def add_data(self, data):
 		if (self.columnnames is None):
@@ -174,6 +234,8 @@ class TableData:
 
 		return 1
 
+
+
 	def __str__(self):
 		output = ""
 		output += f"Filename: {str(self.filename)}\n"
@@ -191,12 +253,16 @@ class PseudoTable:
 	use_readable_pseudonyms = False
 	index = 0
 
+
+
 	def __init__(self, use_readable_pseudonyms=False, fieldnames=None):
 		if fieldnames is None:
 			fieldnames = []
 		self.fieldnames = fieldnames
 		self.values = {}
 		self.use_readable_pseudonyms = use_readable_pseudonyms
+
+
 
 	def set_fieldnames(self, fieldnames):
 		if len(self.fieldnames) > 0:
@@ -208,6 +274,8 @@ class PseudoTable:
 
 		return 1
 
+
+
 	def add_value(self, keys):
 		# create a tuple to have multiple values as a combined key for the dict
 		keytuple = tuple(keys)
@@ -218,6 +286,8 @@ class PseudoTable:
 
 		self.values[keytuple] = self.generate_pseudonym()
 
+
+
 	def get_pseudo(self, keys):
 		keytuple = tuple(keys)
 		try:
@@ -225,6 +295,8 @@ class PseudoTable:
 		except KeyError as ke:
 			log.error(str(ke) + ": Key not found in dictionary!")
 			return None
+
+
 
 	def generate_pseudonym(self):
 		output = ''
