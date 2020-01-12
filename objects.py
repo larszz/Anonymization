@@ -113,26 +113,14 @@ class DataSet:
 		return [valuestring]
 
 	def __str__(self):
-		"""
-		nl = '\n'
-
-		output = ""
-		# output += 'Dataset' + nl
-		for v in self.values:
-			output += '{0}:\t{1}\n'.format(str(v), self.values[v])
-
-		output += 2 * nl
-		return output"""
-		return self.to_compact_string()
-
-	def __init__(self):
-		self.values = {}
-
-	def to_compact_string(self):
 		output = ""
 		for v in self.values:
 			output += f'{str(self.values[v])},\t'
 		return output
+
+	def __init__(self):
+		self.values = {}
+
 
 
 class TableData:
