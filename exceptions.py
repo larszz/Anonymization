@@ -1,7 +1,7 @@
 class Messages:
 	NONETYPEERROR = '"{0}" is NoneType!'
 	COLUMNNAMEERROR = 'Column names could not be read from file {0}'
-	KEYERROR = 'Key {0} already used! Skipping key.'
+	KEYALREADYUSED = 'Key {0} already used!'
 	ALREADYSETERROR = '{0} already set!'
 	INSTANCEERROR = '{0} is not instance of {1}'
 	DATANOTSETERROR = 'Data could not be set.'

@@ -94,7 +94,7 @@ class DataSet:
 
 	def add_to_values(self, key, value):
 		if key in self.values:
-			log.warning(ex.Messages.KEYERROR.format(key))
+			log.warning(ex.Messages.KEYALREADYUSED.format(key))
 			return
 
 		self.values[str(key)] = DataSet.extractEntries(value)
@@ -103,23 +103,21 @@ class DataSet:
 
 
 
-	def change_field_value(self, key, value: str = None, pattern: str = None):
-		# change the value of a field to given value
-		if value is not None:
-			self.values[key] = value
-			return
-
+	def change_field_value(self, key, pattern: str = None):
 		# change the value of a field by a given pattern
-		if pattern is not None:
+		if pattern is None:
+			self.values[key] = h.get_random_colval()
+		else:
 			self.values[key] = DataSet.get_pattern_value(self.values[key], pattern)
-			return
 
 
 
-	def combine_fields(self, keys, value: str = None, newfieldname: str = None):
+	def combine_fields(self, keys, newfieldname: str = None):
 		# delete the values corresponding to the given keys from the dict
 		for k in keys:
 			self.values.pop(k)
+
+		value = h.get_random_colval()
 
 		if newfieldname is None:
 			newfieldname = DataSet.get_new_fieldname(keys)
@@ -156,6 +154,14 @@ class DataSet:
 
 
 
+	def __getitem__(self, item):
+		try:
+			return self.values[item]
+		except KeyError as ke:
+			log.error(ke)
+
+
+
 	@staticmethod
 	def get_pattern_value(value, pattern):
 		# TODO
@@ -175,8 +181,8 @@ class DataSet:
 
 class TableData:
 	filename = None
-	columnnames = None
-	datasets = None
+	column_names = None
+	datasets: dict[DataSet] = None
 
 
 
@@ -187,10 +193,10 @@ class TableData:
 
 
 	def set_columnnames(self, columnnames):
-		if not (self.columnnames is None):
+		if not (self.column_names is None):
 			log.error(ex.Messages.ALREADYSETERROR.format('Columnnames'))
 			return -1
-		self.columnnames = columnnames
+		self.column_names = columnnames
 
 
 
@@ -209,11 +215,11 @@ class TableData:
 
 
 	def add_data(self, data):
-		if (self.columnnames is None):
+		if self.column_names is None:
 			log.error(ex.Messages.NONETYPEERROR.format('Columnnames'))
 			return -1
 
-		if (data is None):
+		if data is None:
 			log.error(ex.Messages.NONETYPEERROR.format('Data'))
 			return -1
 
@@ -225,7 +231,7 @@ class TableData:
 			dataset = DataSet()
 			for idxCol in range(len(data[idxRow])):
 				try:
-					dataset.add_to_values(self.columnnames[idxCol], data[idxRow][idxCol])
+					dataset.add_to_values(self.column_names[idxCol], data[idxRow][idxCol])
 				except IndexError as ie:
 					log.warning('Error: {0}\nidxRow: {1}\tidxCol: {2}'.format(ie.message, str(idxRow), str(idxCol)))
 					continue
@@ -236,10 +242,24 @@ class TableData:
 
 
 
+	def anonymize_one(self, field, pattern=None):
+		for ds in self.datasets:
+			ds.change_field_value(field, pattern)
+
+
+
+	def anonymize_many(self, fields, newfieldname: str = None):
+		for ds in self.datasets:
+			ds.combine_fields(fields, newfieldname)
+
+
+
+
+
 	def __str__(self):
 		output = ""
 		output += f"Filename: {str(self.filename)}\n"
-		output += h.listToString(self.columnnames, 'Column names') + '\n'
+		output += h.listToString(self.column_names, 'Column names') + '\n'
 
 		for d in self.datasets:
 			output += str(d) + '\n'
@@ -308,5 +328,5 @@ class PseudoTable:
 			self.index += 1
 		else:
 			# output a random hex string with 16 digits
-			output += str(binascii.b2a_hex(os.urandom(8)))
+			output += h.get_random_colval()
 		return output
