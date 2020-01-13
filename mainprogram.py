@@ -1,7 +1,6 @@
-import os
-import objects as o
 import helper as h
 import FileReader as fr
+import objects.Configuration as conf
 
 CONFIGURATION_PATH = "configurations/configuration.dat"
 
@@ -13,7 +12,7 @@ pseudonymrows = []
 
 
 def readConfig():
-	newConfig = o.Configuration()
+	newConfig = conf.Configuration()
 
 	# read file
 	with open(CONFIGURATION_PATH, 'r') as lines:

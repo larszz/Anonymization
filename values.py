@@ -12,5 +12,3 @@ class delimiters:
 		PRIMARY = ';'
 		SECONDARIES = [',', ';']
 		QUOTECHAR = '"'
-
-

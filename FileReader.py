@@ -1,10 +1,11 @@
+import csv
+import logging as log
 import os
 from typing import List
+
 import exceptions as ex
-import helper as h
-import objects as o
-import logging as log
-import csv
+import objects.Configuration as conf
+import objects.TableData as td
 import values as v
 
 log.basicConfig(format='%(asctime)s %(message)s')
@@ -14,7 +15,7 @@ def readFile(configuration):
 	tables = []
 
 	# check object types
-	if not isinstance(configuration, o.Configuration):
+	if not isinstance(configuration, conf.Configuration):
 		return -1
 
 	# iterate over given directories
@@ -32,7 +33,7 @@ def readFile(configuration):
 			with open(filename, 'r') as file:
 				csv_reader = csv.reader(file, delimiter=v.delimiters.csv.PRIMARY, quotechar=v.delimiters.csv.QUOTECHAR)
 
-				tabledata = o.TableData(filename)
+				tabledata = td.TableData(filename)
 				i = 0
 				try:
 					rows = extractLines(csv_reader)
