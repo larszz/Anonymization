@@ -103,26 +103,43 @@ class DataSet:
 
 
 
-	def change_field_value(self, key, pattern: str = None):
+	def replace_value(self, key, value):
+		previous = self.values[key]
+		self.values[key] = value
+		return previous
+
+
+
+	def anonymize_by_pattern(self, key, pattern: str = None):
+		newvalue = DataSet.get_pattern_value(self.values[key], pattern)
+
 		# change the value of a field by a given pattern
-		if pattern is None:
-			self.values[key] = h.get_random_colval()
-		else:
-			self.values[key] = DataSet.get_pattern_value(self.values[key], pattern)
+		previous = self.replace_value(key, newvalue)
+		return previous
 
 
 
-	def combine_fields(self, keys, newfieldname: str = None):
+	def anonymize_random(self, key):
+		newvalue = h.get_random_colval()
+
+		previous = self.replace_value(key, newvalue)
+		return previous
+
+
+
+	def combine_fields(self, keys, newfieldname: str):
+		previous = {}
+		# add the new value to the "previous" dict to make later unpseudonymization possible
+		value = h.get_random_colval()
+		previous[newfieldname] = value
+
 		# delete the values corresponding to the given keys from the dict
 		for k in keys:
+			previous[k] = self.values[k]
 			self.values.pop(k)
 
-		value = h.get_random_colval()
-
-		if newfieldname is None:
-			newfieldname = DataSet.get_new_fieldname(keys)
-
 		self.values[newfieldname] = value
+		return previous
 
 
 
@@ -168,7 +185,7 @@ class DataSet:
 		return value
 
 
-
+"""
 	@staticmethod
 	def get_new_fieldname(keys):
 		separator = '_'
@@ -177,12 +194,13 @@ class DataSet:
 			output += str(k) + separator
 		output = output.rstrip(separator)
 		return output
+"""
 
 
 class TableData:
 	filename = None
 	column_names = None
-	datasets: dict[DataSet] = None
+	datasets: dict
 
 
 
@@ -244,11 +262,11 @@ class TableData:
 
 	def anonymize_one(self, field, pattern=None):
 		for ds in self.datasets:
-			ds.change_field_value(field, pattern)
+			ds.anonymize_by_pattern(field, pattern)
 
 
 
-	def anonymize_many(self, fields, newfieldname: str = None):
+	def pseudonymize_many(self, fields, newfieldname: str = None):
 		for ds in self.datasets:
 			ds.combine_fields(fields, newfieldname)
 
