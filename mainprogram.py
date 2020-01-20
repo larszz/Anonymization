@@ -12,7 +12,7 @@ pseudonymrows = []
 
 
 def readConfig():
-	newConfig = conf.Configuration()
+	new_config = conf.Configuration()
 
 	# read file
 	with open(CONFIGURATION_PATH, 'r') as lines:
@@ -30,11 +30,11 @@ def readConfig():
 			confKey = str(e[0]).strip()
 			confValues = getConfigValues(e[1])
 
-			newConfig.setConfigurationValue(confKey, confValues)
+			new_config.setConfigurationValue(confKey, confValues)
 
-	print(newConfig)
+	print(new_config)
 
-	return newConfig
+	return new_config
 
 
 # extracts and strips values
@@ -42,7 +42,3 @@ def getConfigValues(valueString):
 	values = str(valueString).split(',')
 	values = h.stripList(values)
 	return values
-
-
-conf = readConfig()
-fr.readFile(conf)

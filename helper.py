@@ -1,6 +1,7 @@
 import binascii
 import logging as log
 import os
+import pprint
 
 
 def printList(list, headline='', seperator=', '):
@@ -23,14 +24,19 @@ def listToString(list, headline='', seperator=', ', headlineseperator='\n'):
 
 
 def printList2D(list, headline='', seperator=',\t'):
+	output = ''
+	if headline != '':
+		output += headline + '\n'
 	for x in list:
 		line = ""
-		for y in list:
+		for y in x:
 			line += str(y) + seperator
 
 		line = line.rstrip(seperator)
-		print(line)
+		output += line + '\n'
 
+	print(output)
+	pprint.pprint(list)
 
 def stripList(list):
 	new_list = []

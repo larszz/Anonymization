@@ -1,14 +1,16 @@
 import logging as log
 import exceptions as ex
 import helper as h
-import objects.DataSet as ds
-
+from objects import DataSet, PseudonymTable
+import random
 
 
 class TableData:
 	filename = None
 	column_names = None
 	datasets: dict
+
+	pseudonym_tables = {}
 
 
 
@@ -54,7 +56,7 @@ class TableData:
 			return -1
 
 		for idxRow in range(len(data)):
-			dataset = ds.DataSet()
+			dataset = DataSet.DataSet()
 			for idxCol in range(len(data[idxRow])):
 				try:
 					dataset.add_to_values(self.column_names[idxCol], data[idxRow][idxCol])
@@ -68,15 +70,57 @@ class TableData:
 
 
 
+	# anonymizes one given field;
+	# if pattern is set: tries to change the field value depending on the pattern
+	# if no pattern is given, the value will be changed to a random hex number
 	def anonymize_one(self, field, pattern=None):
-		for ds in self.datasets:
-			ds.anonymize_by_pattern(field, pattern)
+		if pattern is None:
+			for ds in self.datasets:
+				ds.set_fieldvalue_random(field)
+		else:
+			for ds in self.datasets:
+				ds.set_fieldvalue_by_pattern(field, pattern)
 
 
 
+	# combines multiple given fields into one field, representing the previous values by a pseudonym
+	# i.e. pseudonymize a city and its plz by one pseudonym
 	def pseudonymize_many(self, fields, newfieldname: str = None):
+		previous = []
 		for ds in self.datasets:
-			ds.combine_fields(fields, newfieldname)
+			pre = ds.combine_fields(fields, newfieldname)
+			previous.append(pre)
+
+
+
+	# pseudonymizes the given field
+	def pseudonymize_one(self, field, pseudonym_table=None, readable: bool = True):
+		previous = []
+		# build a pseudonym table if there is no table given
+		if pseudonym_table is None:
+			pseudonym_table = self.build_pseudonym_table(field, readable)
+			self.pseudonym_tables[TableData.__get_directory_key(field)] = pseudonym_table
+
+		# set the pseudonyms in every dataset
+		for ds in self.datasets:
+			ds.replace_value(field, pseudonym_table.get_pseudonym_from_dataset(ds))
+
+
+
+	# builds the pseudonym table from the current table for the given fields
+	def build_pseudonym_table(self, fields, readable) -> PseudonymTable:
+		pseudo_table = PseudonymTable.PseudonymTable(readable, fields)
+
+		# shuffle datasets to prevent pseudonyms in the same order as the read datasets
+		random_datasets = self.datasets.copy()
+		random.shuffle(random_datasets)
+
+		# add needed values of every dataset to pseudonym table
+		# TODO: berücksichtigen, dass Werte eines DS auch eine LISTE sein können!
+		for dataset in random_datasets:
+			pseudo_table.add_value_from_dataset(dataset, TableData.__get_directory_key(fields))
+
+		return pseudo_table
 
 
 
@@ -88,3 +132,9 @@ class TableData:
 		for d in self.datasets:
 			output += str(d) + '\n'
 		return str(output)
+
+
+
+	@staticmethod
+	def __get_directory_key(fields):
+		return (fields,)

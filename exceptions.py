@@ -1,5 +1,6 @@
 import logging as log
 
+
 class Messages:
 	NONETYPEERROR = '"{0}" is NoneType!'
 	COLUMNNAMEERROR = 'Column names could not be read from file {0}'
@@ -7,6 +8,7 @@ class Messages:
 	ALREADYSETERROR = '{0} already set!'
 	INSTANCEERROR = '{0} is not instance of {1}'
 	DATANOTSETERROR = 'Data could not be set.'
+	KEY_NOT_FOUND = 'Key {0} not found in Dictionary'
 
 
 
@@ -30,17 +32,39 @@ class ColumnNameError(Exception):
 
 
 class Logger:
-	def log_none_type(self, fieldname: str=None):
+
+	@staticmethod
+	def log_none_type(fieldname: str = None):
 		if fieldname is None:
 			return
 
 		log.warning(Messages.NONETYPEERROR.format(fieldname))
 
 
-	def log_instance_error(self, obj: str=None, type: str=None):
-		if (obj is None) or (type is None):
-			self.log_none_type("Object or type")
+
+	@staticmethod
+	def log_instance_error(objectname: str = None, type: str = None):
+		if (objectname is None) or (type is None):
+			Logger.log_none_type("Object or type")
 			return
 
 		log.error(Messages.INSTANCEERROR.format(objectname, type))
+
+
+
+	@staticmethod
+	def log_key_not_found_error(key):
+		if key is None:
+			Logger.log_none_type('key')
+			return
+
+		log.warning(Messages.KEY_NOT_FOUND.format(key))
+
+
+	@staticmethod
+	def log_not_set_yet(name: str):
+		if name is None:
+			Logger.log_none_type('name')
+			return
+		log.warning('{0} is not set yet!'.format(name))
 

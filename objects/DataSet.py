@@ -3,7 +3,7 @@ import logging as log
 import exceptions as ex
 import helper as h
 import values as v
-
+from objects import PseudoEntry as pe
 
 
 class DataSet:
@@ -16,55 +16,56 @@ class DataSet:
 			log.warning(ex.Messages.KEYALREADYUSED.format(key))
 			return
 
-		self.values[str(key)] = DataSet.extractEntries(value)
+		self.values[str(key)] = DataSet.extract_entries(value)
 		log.debug(ex.Messages.Debug.VALUE_ADDED_TO_KEY.format(key, value))
 		pass
 
 
-
+	# replaces the value for given key
+	# returns: the old value
 	def replace_value(self, key, value):
-		previous = self.values[key]
+		old_val = self.values[key]
 		self.values[key] = value
-		return previous
+		return old_val
 
 
-
-	def anonymize_by_pattern(self, key, pattern: str = None):
-		newvalue = DataSet.get_pattern_value(self.values[key], pattern)
-
+	# sets the value of a field to itself, masked by the given pattern
+	def set_fieldvalue_by_pattern(self, key, pattern: str = None):
+		new_value = DataSet.get_pattern_value(self.values[key], pattern)
 		# change the value of a field by a given pattern
-		previous = self.replace_value(key, newvalue)
-		return previous
+		self.replace_value(key, new_value)
 
 
+	# sets the value of a field to a random hex number
+	def set_fieldvalue_random(self, key):
+		new_value = h.get_random_colval()
+		pseudo_entry = pe.PseudoEntry(new_value)
+		pseudo_entry.add_old_value(self.replace_value(key, new_value))
 
-	def anonymize_random(self, key):
-		newvalue = h.get_random_colval()
+		self.replace_value(key)
 
-		previous = self.replace_value(key, newvalue)
-		return previous
+		return pseudo_entry
 
 
-
-	def combine_fields(self, keys, newfieldname: str):
-		previous = {}
-		# add the new value to the "previous" dict to make later unpseudonymization possible
+	# combines the given values as a key
+	def combine_fields(self, keys, new_field_name: str):
+		# add the new value to the pseudo entry
 		value = h.get_random_colval()
-		previous[newfieldname] = value
+		pseudo_entry = pe.PseudoEntry(value)
 
 		# delete the values corresponding to the given keys from the dict
 		for k in keys:
-			previous[k] = self.values[k]
+			pseudo_entry.add_old_value(k, self.values[k])
 			self.values.pop(k)
 
-		self.values[newfieldname] = value
-		return previous
+		self.values[new_field_name] = value
+		return pseudo_entry
 
 
 
 	# tries to split a given value string into multiple values, depending on the set secondary delimiters
 	@staticmethod
-	def extractEntries(valuestring):
+	def extract_entries(valuestring):
 		for delim in v.delimiters.csv.SECONDARIES:
 			values = str(valuestring).split(delim)
 
@@ -79,8 +80,8 @@ class DataSet:
 
 	def __str__(self):
 		output = ""
-		for v in self.values:
-			output += f'{str(self.values[v])},\t'
+		for val in self.values:
+			output += f'{str(self.values[val])},\t'
 		return output
 
 
@@ -98,6 +99,24 @@ class DataSet:
 
 
 
+
+
+	# returns a value from the values-dict
+	def get_value(self, key=None):
+		if key is None:
+			ex.Logger.log_none_type('key')
+			return None
+
+		if key in self.values:
+			return self.values[key]
+		else:
+			ex.Logger.log_key_not_found_error(key)
+			return None
+
+
+	# changes the value depending on the given pattern,
+	# i.e. to show only the first two digits and exchange the rest by stars *
+	# TODO: implement
 	@staticmethod
 	def get_pattern_value(value, pattern):
 		return value
