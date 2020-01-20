@@ -156,6 +156,12 @@ class TableData:
 
 	def __str__(self):
 		output = ""
+		output += f"Filename: {str(self.filename)}"
+		return output
+
+
+	def long_string(self):
+		output = ""
 		output += f"Filename: {str(self.filename)}\n"
 		output += h.listToString(self.column_names, 'Column names') + '\n'
 

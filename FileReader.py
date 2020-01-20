@@ -11,7 +11,7 @@ import values as v
 log.basicConfig(format='%(asctime)s %(message)s')
 
 
-def readFiles(configuration):
+def readFiles(configuration, verbose=False):
 	tables = []
 
 	# check object types
@@ -55,8 +55,12 @@ def readFiles(configuration):
 					log.warning(cne.message)
 					continue
 
-	for t in tables:
-		print(t)
+	if verbose:
+		for t in tables:
+			print(t.long_string())
+	else:
+		for t in tables:
+			print(t)
 
 	return tables
 
