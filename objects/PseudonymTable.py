@@ -132,16 +132,21 @@ class PseudonymTable:
 			Logger.log_none_type('dataset')
 			return
 
+		# execute
 		key_list = []
 		for fn in self.fieldnames:
-			val = dataset.get_value(fn)
-			if val is None:
+			value = dataset.get_value(fn)
+			if value is None:
 				Logger.log_key_not_found_error(fn)
 				return None
-			key_list.append(val)
 
-		key = self.generate_key_value(key_list)
-		return self.get_pseudonym(key)
+			# if the fieldvalue is a list, add all subvalues to list
+			if isinstance(value, list):
+				for subvalue in value:
+					key_list.append(subvalue)
+			else:
+				key_list.append(value)
+		return self.get_pseudonym(key_list)
 
 
 

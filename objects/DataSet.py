@@ -47,15 +47,12 @@ class DataSet:
 			return -2
 
 		# get pseudonym
-		key_list = []
-		for fn in fieldnames:
-			key_list.append(self.values[fn])
-
 		pseudonym = pseudonym_table.get_pseudonym_from_dataset(self)
 		if pseudonym is None:
 			return -3
 
-		# delete the values corresponding to the given keys from the dict
+		# delete the
+		# values
 		for k in fieldnames:
 			self.values.pop(k)
 
