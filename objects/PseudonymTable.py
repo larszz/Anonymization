@@ -89,18 +89,19 @@ class PseudonymTable:
 		# check none
 		if tabledata is None:
 			Logger.log_none_type('tabledata')
-			return
+			return -1
 		if self.fieldnames is None:
 			Logger.log_not_set_yet('fieldnames')
-			return
-	# check instance
+			return -1
+		# check instance
 		if not isinstance(tabledata, TableData.TableData):
 			Logger.log_instance_error('tabledata', 'tabledata')
-			return
+			return -1
 
 		for dataset in tabledata.datasets:
 			self.add_value_from_dataset(dataset)
 
+		return 1
 
 
 
@@ -108,7 +109,7 @@ class PseudonymTable:
 	# ----------------------------------------------
 	# GETTER
 
-	# returns the pseudonym for directly given keys
+	# returns the pseudonym (tuple) for directly given keys
 	def get_pseudonym(self, keys):
 		key_tuple = self.generate_key_value(keys)
 		try:

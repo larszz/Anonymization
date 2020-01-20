@@ -94,11 +94,13 @@ class TableData:
 
 
 	# pseudonymizes the given field
+	# if Error occurred: return -1
 	def pseudonymize_one(self, field, pseudonym_table=None, readable: bool = True):
-		previous = []
 		# build a pseudonym table if there is no table given
 		if pseudonym_table is None:
 			pseudonym_table = self.build_pseudonym_table(field, readable)
+			if pseudonym_table is None:
+				return -1
 			self.pseudonym_tables[TableData.__get_directory_key(field)] = pseudonym_table
 
 		# set the pseudonyms in every dataset
@@ -112,13 +114,12 @@ class TableData:
 		pseudo_table = PseudonymTable.PseudonymTable(readable, fields)
 
 		# shuffle datasets to prevent pseudonyms in the same order as the read datasets
-		random_datasets = self.datasets.copy()
-		random.shuffle(random_datasets)
+		shuffled_datasets = self.datasets.copy()
+		random.shuffle(shuffled_datasets)
 
-		# add needed values of every dataset to pseudonym table
-		# TODO: berücksichtigen, dass Werte eines DS auch eine LISTE sein können!
-		for dataset in random_datasets:
-			pseudo_table.add_value_from_dataset(dataset, TableData.__get_directory_key(fields))
+		ret_value = pseudo_table.build_pseudonyms_from_data(shuffled_datasets)
+		if ret_value < 0:
+			return None
 
 		return pseudo_table
 
