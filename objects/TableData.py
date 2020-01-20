@@ -123,17 +123,18 @@ class TableData:
 
 	# pseudonymizes the given field
 	# if Error occurred: return -1
-	def pseudonymize_one(self, field, pseudonym_table=None, readable: bool = True):
+	def pseudonymize_one(self, fieldname, pseudonym_table=None, readable: bool = True):
 		# build a pseudonym table if there is no table given
 		if pseudonym_table is None:
-			pseudonym_table = self.build_pseudonym_table(field, readable)
+			pseudonym_table = self.build_pseudonym_table(fieldname, readable)
 			if pseudonym_table is None:
 				return -1
-			self.pseudonym_tables[TableData.__get_directory_key(field)] = pseudonym_table
+			self.pseudonym_tables[common.generate_dict_key(fieldname)] = pseudonym_table
 
 		# set the pseudonyms in every dataset
+		ds: DataSet.DataSet
 		for ds in self.datasets:
-			ds.replace_value(field, pseudonym_table.get_pseudonym_from_dataset(ds))
+			ds.set_pseudonym(fieldname, pseudonym_table)
 
 
 
