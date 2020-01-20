@@ -1,4 +1,6 @@
 import logging as log
+
+import common
 import exceptions as ex
 import helper as h
 from objects import DataSet, PseudonymTable
@@ -39,6 +41,7 @@ class TableData:
 
 	def add_dataset(self, dataset):
 		self.datasets.append(dataset)
+
 
 
 	# add the given data, separated into a two-dimensional list
@@ -85,11 +88,36 @@ class TableData:
 
 	# combines multiple given fields into one field, representing the previous values by a pseudonym
 	# i.e. pseudonymize a city and its plz by one pseudonym
-	def pseudonymize_many(self, fields, newfieldname: str = None):
-		previous = []
+	def pseudonymize_many(self, fieldnames, pseudonym_table=None, readable: bool = False,
+						  newfieldname: str = None):
+		# check none
+		if fieldnames is None:
+			ex.Logger.log_none_type('fields')
+			return -1
+		if pseudonym_table is None:
+			ex.Logger.log_none_type('pseudonym_table')
+			return -1
+		if newfieldname is None:
+			ex.Logger.log_none_type('newfieldname')
+			return -1
+
+		# check instance
+		if not isinstance(pseudonym_table, PseudonymTable.PseudonymTable):
+			ex.Logger.log_instance_error('pseudonym_table', 'PseudonymTable')
+			return -2
+
+		# build pseudonym table
+		if pseudonym_table is None:
+			pseudonym_table = self.build_pseudonym_table(fieldnames, readable)
+			if pseudonym_table is None:
+				return -1
+			self.pseudonym_tables[common.generate_dict_key(fieldnames)] = pseudonym_table
+
+		ds: DataSet.DataSet
 		for ds in self.datasets:
-			pre = ds.combine_fields(fields, newfieldname)
-			previous.append(pre)
+			ds.combine_fields_to_pseudonym(fieldnames, pseudonym_table)
+
+
 
 
 
@@ -110,8 +138,8 @@ class TableData:
 
 
 	# builds the pseudonym table from the current table for the given fields
-	def build_pseudonym_table(self, fields, readable) -> PseudonymTable:
-		pseudo_table = PseudonymTable.PseudonymTable(readable, fields)
+	def build_pseudonym_table(self, fieldnames, readable) -> PseudonymTable:
+		pseudo_table = PseudonymTable.PseudonymTable(readable, fieldnames)
 
 		# shuffle datasets to prevent pseudonyms in the same order as the read datasets
 		shuffled_datasets = self.datasets.copy()
@@ -133,9 +161,3 @@ class TableData:
 		for d in self.datasets:
 			output += str(d) + '\n'
 		return str(output)
-
-
-
-	@staticmethod
-	def __get_directory_key(fields):
-		return (fields,)

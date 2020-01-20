@@ -1,5 +1,5 @@
 import logging as log
-
+import common
 import exceptions as ex
 import helper as h
 import values as v
@@ -23,7 +23,6 @@ class DataSet:
 
 
 	# replaces the value for given key
-	# returns: the old value
 	def replace_value(self, key, value):
 		self.values[key] = value
 
@@ -32,20 +31,36 @@ class DataSet:
 	# ------------------------------------------
 	# PSEUDONYMIZATION
 
-	# combines the given values as a key
-	# TODO: überarbeiten, pseudonym muss NICHT MEHR zurückgegeben werden!
-	def combine_fields(self, keys, new_field_name: str):
-		# add the new value to the pseudo entry
-		value = h.get_random_colval()
-		pseudo_entry = pe.PseudoEntry(value)
+	# replaces the given values with one pseudonym
+	def combine_fields_to_pseudonym(self, fieldnames, pseudonym_table):
+		# check none
+		if fieldnames is None:
+			ex.Logger.log_none_type('fieldnames')
+			return -1
+		if pseudonym_table is None:
+			ex.Logger.log_none_type('pseudonym_table')
+			return -1
+
+		# check instance
+		if not isinstance(pseudonym_table, PseudonymTable.PseudonymTable):
+			ex.Logger.log_instance_error('pseudonym_table', 'PseudonymTable')
+			return -2
+
+		# get pseudonym
+		key_list = []
+		for fn in fieldnames:
+			key_list.append(self.values[fn])
+
+		pseudonym = pseudonym_table.get_pseudonym_from_dataset(self)
+		if pseudonym is None:
+			return -3
 
 		# delete the values corresponding to the given keys from the dict
-		for k in keys:
-			pseudo_entry.add_old_value(k, self.values[k])
+		for k in fieldnames:
 			self.values.pop(k)
 
-		self.values[new_field_name] = value
-		return pseudo_entry
+		self.values[pseudonym_table.get_new_fieldname()] = pseudonym
+
 
 
 	# sets the value for the given field name to the previous generated pseudonym, selected from the given PseudonymTable
@@ -86,7 +101,7 @@ class DataSet:
 
 	# sets the value of a field to a random hex number
 	def set_fieldvalue_random(self, fieldname):
-		new_value = h.get_random_colval()
+		new_value = common.get_random_colval()
 		pseudo_entry = pe.PseudoEntry(new_value)
 		pseudo_entry.add_old_value(self.replace_value(fieldname, new_value))
 

@@ -57,9 +57,4 @@ def dictToString(dict, headline=''):
 		log.warning('An Exception occured!')
 
 
-def get_random_hex(length=8):
-	return str(binascii.b2a_hex(os.urandom(length)))
 
-
-def get_random_colval():
-	return str(get_random_hex(5))

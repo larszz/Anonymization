@@ -34,7 +34,7 @@ class ColumnNameError(Exception):
 class Logger:
 
 	@staticmethod
-	def log_none_type(fieldname: str = None):
+	def log_none_type(fieldname: str):
 		if fieldname is None:
 			return
 
@@ -43,7 +43,7 @@ class Logger:
 
 
 	@staticmethod
-	def log_instance_error(objectname: str = None, type: str = None):
+	def log_instance_error(objectname: str, type: str):
 		if (objectname is None) or (type is None):
 			Logger.log_none_type("Object or type")
 			return
@@ -53,7 +53,7 @@ class Logger:
 
 
 	@staticmethod
-	def log_key_not_found_error(key):
+	def log_key_not_found_error(key: str):
 		if key is None:
 			Logger.log_none_type('key')
 			return
