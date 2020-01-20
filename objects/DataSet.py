@@ -100,7 +100,6 @@ class DataSet:
 
 	@staticmethod
 	def get_pattern_value(value, pattern):
-		# TODO
 		return value
 
 

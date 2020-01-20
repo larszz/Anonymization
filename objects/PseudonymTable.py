@@ -2,6 +2,7 @@ import logging as log
 
 import exceptions as ex
 import helper as h
+from objects import TableData
 
 
 
@@ -47,13 +48,24 @@ class PseudoTable:
 
 
 
-	def get_pseudo(self, keys):
-		keytuple = tuple(keys)
-		try:
-			return self.values[keytuple]
-		except KeyError as ke:
-			log.error(str(ke) + ": Key not found in dictionary!")
-			return None
+
+
+	# generate the pseudonyms from given table data
+	def build_pseudonyms_from_data(self, tabledata):
+		# check none
+		if tabledata is None:
+			Logger.log_none_type('tabledata')
+			return
+		if self.fieldnames is None:
+			Logger.log_not_set_yet('fieldnames')
+			return
+	# check instance
+		if not isinstance(tabledata, TableData.TableData):
+			Logger.log_instance_error('tabledata', 'tabledata')
+			return
+
+		for dataset in tabledata.datasets:
+			self.add_value_from_dataset(dataset)
 
 
 

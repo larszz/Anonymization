@@ -42,5 +42,5 @@ class Logger:
 			self.log_none_type("Object or type")
 			return
 
-		log.error(Messages.INSTANCEERROR.format(obj, type))
+		log.error(Messages.INSTANCEERROR.format(objectname, type))
 

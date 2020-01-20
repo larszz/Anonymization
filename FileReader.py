@@ -11,7 +11,7 @@ import values as v
 log.basicConfig(format='%(asctime)s %(message)s')
 
 
-def readFile(configuration):
+def readFiles(configuration):
 	tables = []
 
 	# check object types

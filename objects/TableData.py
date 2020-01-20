@@ -1,5 +1,4 @@
 import logging as log
-
 import exceptions as ex
 import helper as h
 import objects.DataSet as ds
@@ -40,14 +39,14 @@ class TableData:
 		self.datasets.append(dataset)
 
 
-
+	# add the given data, separated into a two-dimensional list
 	def add_data(self, data):
 		if self.column_names is None:
-			log.error(ex.Messages.NONETYPEERROR.format('Columnnames'))
+			ex.Logger.log_none_type('Columnnames')
 			return -1
 
 		if data is None:
-			log.error(ex.Messages.NONETYPEERROR.format('Data'))
+			ex.Logger.log_none_type('Data')
 			return -1
 
 		if not isinstance(data, list):
