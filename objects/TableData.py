@@ -124,13 +124,18 @@ class TableData:
 	# pseudonymizes the given field
 	# if Error occurred: return -1
 	def pseudonymize_one(self, fieldname, pseudonym_table=None, readable: bool = True):
+		if fieldname is None:
+			ex.Logger.log_none_type('fieldname')
+			return -1
 		# build a pseudonym table if there is no table given
 		if pseudonym_table is None:
 			pseudonym_table = self.build_pseudonym_table(fieldname, readable)
 			if pseudonym_table is None:
 				return -1
 			self.pseudonym_tables[common.generate_dict_key(fieldname)] = pseudonym_table
-
+		elif isinstance(pseudonym_table, PseudonymTable.PseudonymTable):
+			ex.Logger.log_instance_error('pseudonym_table', 'PseudonymTable')
+			return -2
 		# set the pseudonyms in every dataset
 		ds: DataSet.DataSet
 		for ds in self.datasets:
