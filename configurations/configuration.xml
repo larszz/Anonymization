@@ -1,0 +1,40 @@
+<!--new configuration structure to make more detailed configuration possible-->
+<configuration>
+	<directory>[DIRECTORY-PATH]</directory>
+	<outputdirectory>[OUTPUT-DIRECTORY-PATH]</outputdirectory>
+	<table tablename="table1">
+		<rows_anonym>
+			<row>
+				<name>Row1</name>
+				<pattern>
+					<front>2</front>
+					<end>2</end>
+				</pattern>
+			</row>
+			<row>
+				<name>Row2</name>
+			</row>
+		</rows_anonym>
+		<rows_pseudonym>
+			<row>
+				<name>Row3</name>
+				<linking>
+					<PK>
+						<tablename>Org.csv</tablename>
+						<fieldname>EmployeeNumber</fieldname>
+					</PK>
+				</linking>
+			</row>
+			<row>
+				<name>Row4</name>
+				<name>Row5</name>
+				<newfield>CombinedField</newfield>
+			</row>
+			<row readable="true">
+				<name>Row6</name>
+			</row>
+		</rows_pseudonym>>
+	
+	</table>
+
+</configuration>
