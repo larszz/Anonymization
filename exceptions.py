@@ -69,6 +69,14 @@ class Logger:
 		if name is None:
 			return Logger.log_none_type('name')
 
-		log.warning('{0} is not set yet!'.format(name))
+		log.warning(f'{name} is not set yet!')
 		return -4
 
+
+	@staticmethod
+	def log_word_too_short(name: str, max_length: int):
+		if name is None:
+			return Logger.log_none_type('name')
+
+		log.warning(f'{name} is too short for the pattern! (min length: {str(max_length)})')
+		return -5

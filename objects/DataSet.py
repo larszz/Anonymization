@@ -3,7 +3,8 @@ import common
 import exceptions as ex
 import helper as h
 import values as v
-from objects import PseudoEntry as pe, PseudonymTable
+from objects import PseudonymTable
+from objects.AnonymizationPattern import Pattern
 
 
 class DataSet:
@@ -98,13 +99,7 @@ class DataSet:
 
 	# sets the value of a field to a random hex number
 	def set_fieldvalue_random(self, fieldname):
-		new_value = common.get_random_colval()
-		pseudo_entry = pe.PseudoEntry(new_value)
-		pseudo_entry.add_old_value(self.replace_value(fieldname, new_value))
-
-		self.replace_value(fieldname)
-
-		return pseudo_entry
+		self.replace_value(fieldname, common.get_random_colval())
 
 
 
@@ -166,7 +161,15 @@ class DataSet:
 	# i.e. to show only the first two digits and exchange the rest by stars *
 	# TODO: implement
 	@staticmethod
-	def get_pattern_value(value, pattern):
+	def get_pattern_value(value: str, pattern: Pattern):
+		# check none
+		if value is None:
+			ex.Logger.log_none_type('value')
+			return -1
+		if pattern is None:
+			ex.Logger.log_none_type('pattern')
+			return -1
+
 		return value
 
 
