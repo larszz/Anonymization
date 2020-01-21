@@ -39,32 +39,36 @@ class Logger:
 			return
 
 		log.warning(Messages.NONETYPEERROR.format(fieldname))
+		return -1
 
 
 
 	@staticmethod
 	def log_instance_error(objectname: str, type: str):
 		if (objectname is None) or (type is None):
-			Logger.log_none_type("Object or type")
-			return
+			return Logger.log_none_type("Object or type")
+
 
 		log.error(Messages.INSTANCEERROR.format(objectname, type))
+		return -2
 
 
 
 	@staticmethod
 	def log_key_not_found_error(key: str):
 		if key is None:
-			Logger.log_none_type('key')
-			return
+			return Logger.log_none_type('key')
+
 
 		log.warning(Messages.KEY_NOT_FOUND.format(key))
+		return -3
 
 
 	@staticmethod
 	def log_not_set_yet(name: str):
 		if name is None:
-			Logger.log_none_type('name')
-			return
+			return Logger.log_none_type('name')
+
 		log.warning('{0} is not set yet!'.format(name))
+		return -4
 
