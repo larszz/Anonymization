@@ -6,7 +6,7 @@
 		<rows_anonym>
 			<row>
 				<name>Row1</name>
-				<pattern>
+				<pattern chars_between="3">
 					<front>2</front>
 					<end>2</end>
 				</pattern>
