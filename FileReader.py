@@ -4,7 +4,7 @@ import os
 from typing import List
 
 import exceptions as ex
-import objects.Configuration as conf
+import objects.Configuration_simple as conf
 import objects.TableData as td
 import values as v
 from exceptions import Logger
