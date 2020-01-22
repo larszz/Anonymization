@@ -20,7 +20,7 @@ class Pattern:
 	def mask_by_pattern(self, plain: str) -> str:
 		# check none
 		if plain is None:
-			return Logger.log_none_type('plain')
+			return Logger.log_none_type_error('plain')
 		if not isinstance(plain, str):
 			return Logger.log_instance_error('plain', 'string')
 

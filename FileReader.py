@@ -7,6 +7,7 @@ import exceptions as ex
 import objects.Configuration as conf
 import objects.TableData as td
 import values as v
+from exceptions import Logger
 
 log.basicConfig(format='%(asctime)s %(message)s')
 
@@ -43,7 +44,7 @@ def readFiles(configuration, verbose=False):
 
 					# set the rest of the data
 					if tabledata.add_data(rows[1:]) != 1:
-						log.error(ex.Messages.DATANOTSETERROR)
+						Logger.log_added_with_errors()
 
 					# add tables to the input data
 					tables.append(tabledata)

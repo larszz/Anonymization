@@ -17,7 +17,7 @@ def get_random_colval():
 def generate_dict_key(keys) -> tuple:
 	# check none
 	if keys is None:
-		Logger.log_none_type('keys')
+		Logger.log_none_type_error('keys')
 		return
 
 	# if keys are already a tuple, return that tuple

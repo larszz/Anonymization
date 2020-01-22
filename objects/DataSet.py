@@ -36,10 +36,10 @@ class DataSet:
 	def combine_fields_to_pseudonym(self, fieldnames, pseudonym_table):
 		# check none
 		if fieldnames is None:
-			ex.Logger.log_none_type('fieldnames')
+			ex.Logger.log_none_type_error('fieldnames')
 			return -1
 		if pseudonym_table is None:
-			ex.Logger.log_none_type('pseudonym_table')
+			ex.Logger.log_none_type_error('pseudonym_table')
 			return -1
 
 		# check instance
@@ -65,10 +65,10 @@ class DataSet:
 	def set_pseudonym(self, fieldname, pseudonym_table):
 		# check none
 		if fieldname is None:
-			ex.Logger.log_none_type('fieldname')
+			ex.Logger.log_none_type_error('fieldname')
 			return -1
 		if pseudonym_table is None:
-			ex.Logger.log_none_type('pseudonym_table')
+			ex.Logger.log_none_type_error('pseudonym_table')
 			return -1
 
 		# check instance
@@ -146,7 +146,7 @@ class DataSet:
 	# returns a value from the values-dict
 	def get_value(self, key=None):
 		if key is None:
-			ex.Logger.log_none_type('key')
+			ex.Logger.log_none_type_error('key')
 			return None
 
 		if key in self.values:
@@ -164,10 +164,10 @@ class DataSet:
 	def get_pattern_value(value: str, pattern: Pattern):
 		# check none
 		if value is None:
-			ex.Logger.log_none_type('value')
+			ex.Logger.log_none_type_error('value')
 			return -1
 		if pattern is None:
-			ex.Logger.log_none_type('pattern')
+			ex.Logger.log_none_type_error('pattern')
 			return -1
 
 		return value

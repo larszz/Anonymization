@@ -3,8 +3,6 @@ from typing import Any, Tuple
 
 import common
 from exceptions import Logger
-
-import exceptions as ex
 import helper as h
 from objects import TableData
 
@@ -32,7 +30,7 @@ class PseudonymTable:
 
 	def set_fieldnames(self, fieldnames):
 		if len(self.fieldnames) > 0:
-			log.warning(ex.Messages.ALREADYSETERROR.format('Fieldnames'))
+			Logger.log_already_set('fieldnames')
 			return -1
 
 		if isinstance(fieldnames, list):
@@ -63,7 +61,7 @@ class PseudonymTable:
 	def add_value_from_dataset(self, dataset):
 		# check none
 		if dataset is None:
-			Logger.log_none_type('dataset')
+			Logger.log_none_type_error('dataset')
 			return
 		if self.fieldnames is None:
 			Logger.log_not_set_yet('fieldnames')
@@ -92,7 +90,7 @@ class PseudonymTable:
 	def build_pseudonyms_from_data(self, tabledata):
 		# check none
 		if tabledata is None:
-			Logger.log_none_type('tabledata')
+			Logger.log_none_type_error('tabledata')
 			return -1
 		if self.fieldnames is None:
 			Logger.log_not_set_yet('fieldnames')
@@ -129,7 +127,7 @@ class PseudonymTable:
 	def get_pseudonym_from_dataset(self, dataset):
 		# check none
 		if dataset is None:
-			Logger.log_none_type('dataset')
+			Logger.log_none_type_error('dataset')
 			return
 
 		# execute

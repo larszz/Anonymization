@@ -1,10 +1,10 @@
 import logging as log
 
 import common
-import exceptions as ex
 import helper as h
 from objects import DataSet, PseudonymTable
 import random
+from exceptions import Logger
 
 
 class TableData:
@@ -24,16 +24,14 @@ class TableData:
 
 	def set_columnnames(self, columnnames):
 		if not (self.column_names is None):
-			log.error(ex.Messages.ALREADYSETERROR.format('Columnnames'))
-			return -1
+			return Logger.log_already_set('Columnnames')
 		self.column_names = columnnames
 
 
 
 	def set_filename(self, filename):
 		if not (self.filename is None):
-			log.error(ex.Messages.ALREADYSETERROR.format('Filename'))
-			return -1
+			return Logger.log_already_set('Filename')
 
 		self.filename = filename
 
@@ -47,16 +45,16 @@ class TableData:
 	# add the given data, separated into a two-dimensional list
 	def add_data(self, data):
 		if self.column_names is None:
-			ex.Logger.log_none_type('Columnnames')
-			return -1
+			return Logger.log_none_type_error('Columnnames')
+
 
 		if data is None:
-			ex.Logger.log_none_type('Data')
-			return -1
+			return Logger.log_none_type_error('Data')
+
 
 		if not isinstance(data, list):
-			log.error(ex.Messages.INSTANCEERROR.format('Data', 'List'))
-			return -1
+			return Logger.log_instance_error('Data', 'list')
+
 
 		for idxRow in range(len(data)):
 			dataset = DataSet.DataSet()
@@ -92,19 +90,15 @@ class TableData:
 						  newfieldname: str = None):
 		# check none
 		if fieldnames is None:
-			ex.Logger.log_none_type('fields')
-			return -1
+			return Logger.log_none_type_error('fields')
 		if pseudonym_table is None:
-			ex.Logger.log_none_type('pseudonym_table')
-			return -1
+			return Logger.log_none_type_error('pseudonym_table')
 		if newfieldname is None:
-			ex.Logger.log_none_type('newfieldname')
-			return -1
+			return Logger.log_none_type_error('newfieldname')
 
 		# check instance
 		if not isinstance(pseudonym_table, PseudonymTable.PseudonymTable):
-			ex.Logger.log_instance_error('pseudonym_table', 'PseudonymTable')
-			return -2
+			return Logger.log_instance_error('pseudonym_table', 'PseudonymTable')
 
 		# build pseudonym table
 		if pseudonym_table is None:
@@ -125,8 +119,7 @@ class TableData:
 	# if Error occurred: return -1
 	def pseudonymize_one(self, fieldname, pseudonym_table=None, readable: bool = True):
 		if fieldname is None:
-			ex.Logger.log_none_type('fieldname')
-			return -1
+			return Logger.log_none_type_error('fieldname')
 		# build a pseudonym table if there is no table given
 		if pseudonym_table is None:
 			pseudonym_table = self.build_pseudonym_table(fieldname, readable)
@@ -134,8 +127,7 @@ class TableData:
 				return -1
 			self.pseudonym_tables[common.generate_dict_key(fieldname)] = pseudonym_table
 		elif isinstance(pseudonym_table, PseudonymTable.PseudonymTable):
-			ex.Logger.log_instance_error('pseudonym_table', 'PseudonymTable')
-			return -2
+			return Logger.log_instance_error('pseudonym_table', 'PseudonymTable')
 		# set the pseudonyms in every dataset
 		ds: DataSet.DataSet
 		for ds in self.datasets:
