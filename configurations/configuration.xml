@@ -17,19 +17,19 @@
 			</column>
 		</columns_anonym>
 		<columns_pseudonym>
-			<column>
+			<column id="1">
 				<name>column3</name>
 				<link>
 					<link_table>Org.csv</link_table>
 					<link_field>EmployeeNumber</link_field>
 				</link>
 			</column>
-			<column>
+			<column id="2">
 				<name>column4</name>
 				<name>column5</name>
 				<newfieldname>CombinedField</newfieldname>
 			</column>
-			<column readable="true">
+			<column readable="false">
 				<name>column6</name>
 			</column>
 		</columns_pseudonym>

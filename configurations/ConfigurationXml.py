@@ -25,7 +25,7 @@ class ColAnonymConfig(object):
 
 
 # stores a table link
-class TableLink(object):
+class LinkConfig(object):
 	table_name: str
 	table_column: str
 
@@ -56,16 +56,18 @@ class ColPseudonymConfig(object):
 	column_names: List[str]
 	readable: bool
 	new_fieldname: str
-	link: TableLink
+	link: LinkConfig
 
 
-	def __init__(self, column_names: List[str] = [], readable: bool = True, new_fieldname: str = None,
-				 link: TableLink = None):
-		if column_names is None:
+	def __init__(self, column_names: List[str] = None, readable: bool = True, new_fieldname: str = None,
+				 link: LinkConfig = None):
+		"""if column_names is None:
 			Logger.log_none_type_error('columnnames')
-			return
-
-		self.column_names = column_names
+			return"""
+		if column_names is None:
+			self.column_names = []
+		else:
+			self.column_names = column_names
 		self.readable = readable
 		self.new_fieldname = new_fieldname
 		self.link = link
@@ -76,13 +78,13 @@ class ColPseudonymConfig(object):
 			return Logger.log_none_type_error('cname')
 		self.column_names.append(cname)
 
-	def set_link(self, link: TableLink):
+
+	def set_link(self, link: LinkConfig):
 		if link is None:
 			return Logger.log_none_type_error('link')
 		if self.link is not None:
 			return Logger.log_already_set('link')
 		self.link = link
-
 
 
 # stores whole information about table configuration
@@ -99,6 +101,18 @@ class TableConfig(object):
 		self.pseudonymize = []
 
 
+	def add_anonymize(self, new_config: ColAnonymConfig):
+		if new_config is None:
+			return Logger.log_none_type_error('new_config')
+		self.anonymize.append(new_config)
+
+
+	def add_pseudonymize(self, new_config: ColPseudonymConfig):
+		if new_config is None:
+			return Logger.log_none_type_error('new_config')
+		self.pseudonymize.append(new_config)
+
+
 # stores the whole configuration
 class ConfigurationXml:
 	input_directory: str
@@ -108,6 +122,7 @@ class ConfigurationXml:
 
 
 	def __init__(self):
+		self.tables = []
 		pass
 
 
@@ -144,19 +159,19 @@ class ConfigurationXml:
 		if len(e_tables) < 1:
 			return Logger.log_not_found_in_xml(xt.TABLE, True)
 
-		tab: Element
-		for tab in e_tables:
+		e_table: Element
+		for e_table in e_tables:
 			# get table name
-			if xt.TABLENAME in tab.attrib:
-				a_name = tab.attrib[xt.TABLENAME]
+			if xt.TABLENAME in e_table.attrib:
+				a_name = e_table.attrib[xt.TABLENAME]
 			else:
 				Logger.log_not_found_in_xml(xt.TABLENAME, skip=True)
 				continue
 
-			t_config = TableConfig(a_name)
+			config_table: TableConfig = TableConfig(a_name)
 			# #########################################################################################
 			# ANONYMIZATION COLUMNS ###################################################################
-			e_col_anonym: List[Element] = tab.findall(xt.COLUMNS_ANONYM)
+			e_col_anonym: List[Element] = e_table.findall(xt.COLUMNS_ANONYM)
 
 			# skip if no entry found
 			if len(e_col_anonym) < 1:
@@ -176,7 +191,7 @@ class ConfigurationXml:
 					# iterate over all found columns which must by anonymized
 					for column_anonym in cols_anonym:
 						# get column names
-						e_names = column_anonym.findall(xt.NAME)
+						e_names: List[Element] = column_anonym.findall(xt.NAME)
 						if len(e_names) < 1:
 							Logger.log_not_found_in_xml('name', skip=True)
 							continue
@@ -184,7 +199,7 @@ class ConfigurationXml:
 							Logger.log_too_many_found_in_xml('name', 1, len(e_names))
 
 						# columns object
-						col_config = ColAnonymConfig(column_name=e_names[0])
+						config_anonym_col = ColAnonymConfig(column_name=e_names[0].text)
 
 						# get pattern, if one found
 						e_patterns = column_anonym.findall(xt.PATTERN)
@@ -210,11 +225,13 @@ class ConfigurationXml:
 							if e_between is not None:
 								PatternConfig.set_between(e_between.text)
 
-							col_config.set_pattern(PatternConfig)
+							config_anonym_col.set_pattern(PatternConfig)
+
+						config_table.add_anonymize(config_anonym_col)
 
 			# #########################################################################################
 			# PSEUDONYMIZATION COLUMNS ################################################################
-			e_to_pseudonymize: List[Element] = tab.findall(xt.COLUMNS_PSEUDONYM)
+			e_to_pseudonymize: List[Element] = e_table.findall(xt.COLUMNS_PSEUDONYM)
 
 			# skip if no entry found
 			if len(e_to_pseudonymize) < 1:
@@ -231,7 +248,7 @@ class ConfigurationXml:
 				if len(cols_pseudonym) < 1:
 					Logger.log_not_found_in_xml(xt.COLUMN)
 				else:
-					# iterate over all found which must by pseudonymized
+					# iterate over all found column elements which must by pseudonymized
 					e_column_p: Element
 					for e_column_p in cols_pseudonym:
 						# get column names
@@ -241,16 +258,17 @@ class ConfigurationXml:
 							continue
 
 						# init pseudonym config
-						pseudonym = ColPseudonymConfig()
+						config_pseudonym_col = None
+						config_pseudonym_col = ColPseudonymConfig()
 
 						# set the names
 						n: Element
 						for n in e_names:
-							pseudonym.add_column_name(n.text)
+							config_pseudonym_col.add_column_name(n.text)
 
 						# get readable if specified
 						if xt.READABLE in e_column_p.attrib:
-							pseudonym.readable = e_column_p.attrib[xt.READABLE]
+							config_pseudonym_col.readable = e_column_p.attrib[xt.READABLE]
 
 						# get the new fieldname if specified
 						e_newfieldnames: List[Element] = e_column_p.findall(xt.NEW_FIELD_NAME)
@@ -258,7 +276,7 @@ class ConfigurationXml:
 							if len(e_newfieldnames) > 1:
 								Logger.log_too_many_found_in_xml(xt.NEW_FIELD_NAME, 1, len(e_newfieldnames))
 
-							pseudonym.new_fieldname = e_newfieldnames[0].text
+							config_pseudonym_col.new_fieldname = e_newfieldnames[0].text
 
 						# get a link with its options if specified
 						e_links: List[Element] = e_column_p.findall(xt.LINK)
@@ -271,11 +289,13 @@ class ConfigurationXml:
 							if e_linktable is not None:
 								e_linkcolumn = link.find(xt.LINK_FIELD)
 								if e_linkcolumn is not None:
-									pseudonym.set_link(TableLink(e_linktable, e_linkcolumn))
+									config_pseudonym_col.set_link(LinkConfig(e_linktable, e_linkcolumn))
 								else:
 									Logger.log_pattern_error(xt.LINK_FIELD)
 							else:
 								Logger.log_pattern_error(xt.LINK_TABLE)
 
+						config_table.add_pseudonymize(config_pseudonym_col)
 
+			self.tables.append(config_table)
 		pass

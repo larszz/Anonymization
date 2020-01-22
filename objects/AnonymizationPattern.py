@@ -18,14 +18,14 @@ class Pattern:
 
 
 	def set_chars_front(self, val: int):
-		if self.chars_front != 0:
+		if self.chars_front == 0:
 			self.chars_front = val
 		else:
 			return Logger.log_already_set('chars_front')
 
 
 	def set_chars_end(self, val: int):
-		if self.chars_end != 0:
+		if self.chars_end == 0:
 			self.chars_end = val
 		else:
 			return Logger.log_already_set('chars_end')
