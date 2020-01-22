@@ -1,6 +1,6 @@
 import binascii
 import os
-from typing import Tuple, Any
+from typing import Tuple, Any, List
 
 from exceptions import Logger
 
@@ -30,3 +30,15 @@ def generate_dict_key(keys) -> tuple:
 			t: Tuple[Any] = (str(keys),)
 			return t
 	return keys
+
+
+def generate_combined_field_name(fieldnames: List[str]):
+	if fieldnames is None:
+		return Logger.log_none_type_error('fieldnames')
+
+	output: str = "gen"
+	for fn in fieldnames:
+		output += f'_{fn}'
+	output = output.replace(' ', '')
+	return output
+
