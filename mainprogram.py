@@ -1,6 +1,5 @@
 import helper as h
-import FileReader as fr
-import objects.Configuration_simple as conf
+import configurations.Configuration_simple as conf
 
 CONFIGURATION_PATH = "configurations/configuration.dat"
 

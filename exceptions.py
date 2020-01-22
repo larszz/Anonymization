@@ -1,7 +1,7 @@
 import logging as log
 
 
-class Messages:"""
+class Messages: """
 	NONETYPEERROR = '"{0}" is NoneType!'
 	COLUMNNAMEERROR = 'Column names could not be read from file {0}'
 	KEYALREADYUSED = 'Key {0} already used!'
@@ -10,8 +10,6 @@ class Messages:"""
 	DATANOTSETERROR = 'Data could not be set.'
 	KEY_NOT_FOUND = 'Key {0} not found in Dictionary'
 """
-
-
 
 
 class Debug:
@@ -51,7 +49,6 @@ class Logger:
 		return ErrorValues.NONETYPE
 
 
-
 	@staticmethod
 	def log_instance_error(objectname: str, type: str):
 		if (objectname is None) or (type is None):
@@ -60,7 +57,6 @@ class Logger:
 		log.error(f"{objectname} is not instance of {type}!")
 
 		return ErrorValues.INSTANCE_ERROR
-
 
 
 	@staticmethod
@@ -102,4 +98,25 @@ class Logger:
 	@staticmethod
 	def log_added_with_errors():
 		log.warning("Data was added with errors!")
+		return ErrorValues.DEFAULT_ERROR
+
+
+	@staticmethod
+	def log_not_found_in_xml(name: str, exit = False):
+		if name is None:
+			return Logger.log_none_type_error('name')
+		line = f"{name} can not be found in XML!"
+		if exit:
+			line += " Exiting"
+		log.warning(line)
+		return ErrorValues.DEFAULT_ERROR
+
+
+	@staticmethod
+	def log_too_many_found_in_xml(name: str, should_be: int, actual: int):
+		if name is None:
+			return Logger.log_none_type_error('name')
+
+		log.warning(f"{name} found too often in XML! (should be: {str(should_be)}; is: {str(actual)})\n"
+					f"Continue with first found element.")
 		return ErrorValues.DEFAULT_ERROR
