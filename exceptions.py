@@ -37,6 +37,8 @@ class ErrorValues:
 	WORD_TOO_SHORT = -5
 	ALREADY_SET = -6
 
+log.basicConfig(format='%(asctime)s %(message)s')
+log.basicConfig(level=log.DEBUG)
 
 class Logger:
 
@@ -148,3 +150,12 @@ class Logger:
 		if value is None:
 			return Logger.log_none_type_error('value')
 		log.debug(f"Added to dictionary: {key} -> {value}")
+
+
+	@staticmethod
+	def log_info_wrong_file_type(filename: str, should_be: str):
+		if filename is None:
+			return Logger.log_none_type_error('filename')
+		if should_be is None:
+			return Logger.log_none_type_error('should_be')
+		log.info(f"File '{filename}' is skipped due to wrong file type. (should be: {should_be})")

@@ -298,4 +298,4 @@ class ConfigurationXml:
 						config_table.add_pseudonymize(config_pseudonym_col)
 
 			self.tables.append(config_table)
-		pass
+		return 1
