@@ -131,3 +131,20 @@ class Logger:
 
 		log.warning(f"Element '{element_not_found}' not set. Skipping pattern.")
 		return ErrorValues.DEFAULT_ERROR
+
+
+	@staticmethod
+	def log_already_in_dictionary(key: str):
+		if key is None:
+			return Logger.log_none_type_error('key')
+		log.warning(f"Key '{key}' already in dictionary!")
+		return ErrorValues.ALREADY_SET
+
+
+	@staticmethod
+	def log_debug_value_added(key: str, value: str):
+		if key is None:
+			return Logger.log_none_type_error('key')
+		if value is None:
+			return Logger.log_none_type_error('value')
+		log.debug(f"Added to dictionary: {key} -> {value}")

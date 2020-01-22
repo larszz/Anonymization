@@ -1,6 +1,6 @@
 <!--new configuration structure to make more detailed configuration possible-->
 <configuration>
-	<inputdirectory>[DIRECTORY-PATH]</inputdirectory>
+	<inputdirectory>D:\Projects\Anonymization\Datenschutz-IAM</inputdirectory>
 	<outputdirectory>[OUTPUT-DIRECTORY-PATH]</outputdirectory>
 	<table tablename="table1_Org">
 		<columns_anonym>

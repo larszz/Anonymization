@@ -14,12 +14,10 @@ class DataSet:
 
 	def add_to_values(self, key, value):
 		if key in self.values:
-			log.warning(ex.Messages.KEYALREADYUSED.format(key))
-			return
+			return ex.Logger.log_already_in_dictionary(key)
 
 		self.values[str(key)] = DataSet.extract_entries(value)
-		log.debug(ex.Messages.Debug.VALUE_ADDED_TO_KEY.format(key, value))
-		pass
+		ex.Logger.log_debug_value_added(key, value)
 
 
 
