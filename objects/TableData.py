@@ -1,4 +1,5 @@
 import logging as log
+from typing import List
 
 import common
 import helper as h
@@ -86,15 +87,15 @@ class TableData:
 
 	# combines multiple given fields into one field, representing the previous values by a pseudonym
 	# i.e. pseudonymize a city and its plz by one pseudonym
-	def pseudonymize_many(self, fieldnames, pseudonym_table=None, readable: bool = False,
-						  newfieldname: str = None):
+	def pseudonymize_many(self, fieldnames: List[str], pseudonym_table=None, readable: bool = False,
+						  new_field_name: str = None):
 		# check none
 		if fieldnames is None:
 			return Logger.log_none_type_error('fields')
 		if pseudonym_table is None:
 			return Logger.log_none_type_error('pseudonym_table')
-		if newfieldname is None:
-			return Logger.log_none_type_error('newfieldname')
+		if new_field_name is None:
+			new_field_name = common.generate_combined_field_name(fieldnames)
 
 		# check instance
 		if not isinstance(pseudonym_table, PseudonymTable.PseudonymTable):
@@ -102,7 +103,7 @@ class TableData:
 
 		# build pseudonym table
 		if pseudonym_table is None:
-			pseudonym_table = self.build_pseudonym_table(fieldnames, readable)
+			pseudonym_table = self.build_pseudonym_table(fieldnames, readable, new_field_name=new_field_name)
 			if pseudonym_table is None:
 				return -1
 			self.pseudonym_tables[common.generate_dict_key(fieldnames)] = pseudonym_table
@@ -136,8 +137,8 @@ class TableData:
 
 
 	# builds the pseudonym table from the current table for the given fields
-	def build_pseudonym_table(self, fieldnames, readable) -> PseudonymTable:
-		pseudo_table = PseudonymTable.PseudonymTable(readable, fieldnames)
+	def build_pseudonym_table(self, fieldnames, readable, new_field_name: str = None) -> PseudonymTable:
+		pseudo_table = PseudonymTable.PseudonymTable(readable, fieldnames, new_fieldname=new_field_name)
 
 		# shuffle datasets to prevent pseudonyms in the same order as the read datasets
 		shuffled_datasets = self.datasets.copy()
