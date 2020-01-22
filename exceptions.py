@@ -102,12 +102,14 @@ class Logger:
 
 
 	@staticmethod
-	def log_not_found_in_xml(name: str, exit = False):
+	def log_not_found_in_xml(name: str, exit=False, skip=False):
 		if name is None:
 			return Logger.log_none_type_error('name')
-		line = f"{name} can not be found in XML!"
+		line = f"No {name} found in XML!"
 		if exit:
-			line += " Exiting"
+			line += " Exiting."
+		if skip:
+			line += " Skipping."
 		log.warning(line)
 		return ErrorValues.DEFAULT_ERROR
 
@@ -119,4 +121,13 @@ class Logger:
 
 		log.warning(f"{name} found too often in XML! (should be: {str(should_be)}; is: {str(actual)})\n"
 					f"Continue with first found element.")
+		return ErrorValues.DEFAULT_ERROR
+
+
+	@staticmethod
+	def log_pattern_error(element_not_found: str):
+		if element_not_found is None:
+			return Logger.log_none_type_error('element_not_found')
+
+		log.warning(f"Element '{element_not_found}' not set. Skipping pattern.")
 		return ErrorValues.DEFAULT_ERROR

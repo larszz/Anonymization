@@ -1,5 +1,6 @@
 from exceptions import Logger
 
+
 class Pattern:
 	chars_front: int
 	chars_end: int
@@ -10,11 +11,31 @@ class Pattern:
 	min_length = -1
 
 
-	def __init__(self, chars_front = 0, chars_end = 0, between = -1):
+	def __init__(self, chars_front=0, chars_end=0, between=-1):
 		self.chars_front = chars_front
 		self.chars_end = chars_end
 		self.between = between
 
+
+	def set_chars_front(self, val: int):
+		if self.chars_front != 0:
+			self.chars_front = val
+		else:
+			return Logger.log_already_set('chars_front')
+
+
+	def set_chars_end(self, val: int):
+		if self.chars_end != 0:
+			self.chars_end = val
+		else:
+			return Logger.log_already_set('chars_end')
+
+
+	def set_between(self, val: int):
+		if self.between != 0:
+			self.between = val
+		else:
+			return Logger.log_already_set('between')
 
 
 	def mask_by_pattern(self, plain: str) -> str:
@@ -39,7 +60,6 @@ class Pattern:
 
 		o = plain[:self.chars_front] + (mask_length * self.mask_char) + plain[-self.chars_end:0]
 		return o
-
 
 
 	def get_min_length(self):

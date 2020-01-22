@@ -14,7 +14,7 @@ class delimiters:
 		QUOTECHAR = '"'
 
 
-class xml_names:
+class xml_tags:
 	INPUT_DIR = 'inputdirectory'
 	OUTPUT_DIR = 'outputdirectory'
 	TABLE = 'table'
@@ -26,6 +26,9 @@ class xml_names:
 	FRONT = 'front'
 	END = 'end'
 	COLUMNS_PSEUDONYM = 'columns_pseudonym'
-	LINK = 'link'
-	NEW_FIELD = 'newfield'
+	NEW_FIELD_NAME = 'newfieldname'
 	READABLE = 'readable'
+	BETWEEN = 'between'
+	LINK = 'link'
+	LINK_TABLE = 'link_table'
+	LINK_FIELD = 'link_field'

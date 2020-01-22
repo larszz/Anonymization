@@ -2,12 +2,13 @@
 <configuration>
 	<inputdirectory>[DIRECTORY-PATH]</inputdirectory>
 	<outputdirectory>[OUTPUT-DIRECTORY-PATH]</outputdirectory>
-	<table tablename="table1">
+	<table tablename="table1_Org">
 		<columns_anonym>
 			<column>
 				<name>column1</name>
-				<pattern chars_between="3">
-					<front>2</front>
+				<pattern>
+
+					<between>3</between>
 					<end>2</end>
 				</pattern>
 			</column>
@@ -19,14 +20,14 @@
 			<column>
 				<name>column3</name>
 				<link>
-					<tablename>Org.csv</tablename>
-					<fieldname>EmployeeNumber</fieldname>
+					<link_table>Org.csv</link_table>
+					<link_field>EmployeeNumber</link_field>
 				</link>
 			</column>
 			<column>
 				<name>column4</name>
 				<name>column5</name>
-				<newfield>CombinedField</newfield>
+				<newfieldname>CombinedField</newfieldname>
 			</column>
 			<column readable="true">
 				<name>column6</name>
@@ -39,9 +40,10 @@
 		<columns_anonym>
 			<column>
 				<name>column1</name>
-				<pattern chars_between="3">
+				<pattern>
 					<front>2</front>
 					<end>2</end>
+					<between>1</between>
 				</pattern>
 			</column>
 			<column>
@@ -52,14 +54,14 @@
 			<column>
 				<name>column3</name>
 				<link>
-					<tablename>HV.csv</tablename>
-					<fieldname>EmployeeNumber</fieldname>
+					<link_table>HV.csv</link_table>
+					<link_field>EmployeeNumber</link_field>
 				</link>
 			</column>
 			<column>
 				<name>column4</name>
 				<name>column5</name>
-				<newfield>CombinedField</newfield>
+				<newfieldname>CombinedField</newfieldname>
 			</column>
 			<column readable="true">
 				<name>column6</name>
