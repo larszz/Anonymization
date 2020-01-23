@@ -27,7 +27,7 @@ class ColAnonymConfig(object):
 # stores a table link
 class LinkConfig(object):
 	table_name: str
-	table_column: str
+	table_columns: List[str]
 
 
 	def __init__(self, table_name: str = None, table_column: str = None):
@@ -43,12 +43,12 @@ class LinkConfig(object):
 		self.table_name = name
 
 
-	def set_table_column(self, name: str):
+	def add_table_column(self, name: str):
 		if name is None:
 			return Logger.log_none_type_error('name')
-		if self.table_column is not None:
-			return Logger.log_already_set('name')
-		self.table_column = name
+		if name == '':
+			return Logger.log_string_empty('name')
+		self.table_columns.append(name)
 
 
 # stores information about columns which must be pseudonymized
@@ -284,12 +284,15 @@ class ConfigurationXml:
 							if len(e_links) > 1:
 								Logger.log_too_many_found_in_xml(xt.LINK, 1, len(e_links))
 
-							link: Element = e_links[0]
-							e_linktable = link.find(xt.LINK_TABLE)
+							e_link: Element = e_links[0]
+							e_linktable = e_link.find(xt.LINK_TABLE)
 							if e_linktable is not None:
-								e_linkcolumn = link.find(xt.LINK_FIELD)
-								if e_linkcolumn is not None:
-									config_pseudonym_col.set_link(LinkConfig(e_linktable, e_linkcolumn))
+								e_linkcolumns: List[Element] = e_link.findall(xt.LINK_FIELD)
+								if e_linkcolumns is not None:
+									linkconfig = LinkConfig(e_linktable)
+									for link_col in e_linkcolumns:
+										linkconfig.add_table_column(link_col.text)
+									config_pseudonym_col.set_link(linkconfig)
 								else:
 									Logger.log_pattern_error(xt.LINK_FIELD)
 							else:

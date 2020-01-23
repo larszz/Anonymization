@@ -1,5 +1,5 @@
 import logging as log
-from typing import List
+from typing import List, Dict
 
 import common
 import helper as h
@@ -16,18 +16,15 @@ class TableData:
 	pseudonym_tables = {}
 
 
-
 	def __init__(self, filename):
-		self.datasets = []
+		self.datasets = {}
 		self.filename = filename
-
 
 
 	def set_columnnames(self, columnnames):
 		if not (self.column_names is None):
 			return Logger.log_already_set('Columnnames')
 		self.column_names = columnnames
-
 
 
 	def set_filename(self, filename):
@@ -37,10 +34,8 @@ class TableData:
 		self.filename = filename
 
 
-
 	def add_dataset(self, dataset):
 		self.datasets.append(dataset)
-
 
 
 	# add the given data, separated into a two-dimensional list
@@ -48,14 +43,11 @@ class TableData:
 		if self.column_names is None:
 			return Logger.log_none_type_error('Columnnames')
 
-
 		if data is None:
 			return Logger.log_none_type_error('Data')
 
-
 		if not isinstance(data, list):
 			return Logger.log_instance_error('Data', 'list')
-
 
 		for idxRow in range(len(data)):
 			dataset = DataSet.DataSet()
@@ -71,7 +63,6 @@ class TableData:
 		return 1
 
 
-
 	# anonymizes one given field;
 	# if pattern is set: tries to change the field value depending on the pattern
 	# if no pattern is given, the value will be changed to a random hex number
@@ -82,7 +73,6 @@ class TableData:
 		else:
 			for ds in self.datasets:
 				ds.set_fieldvalue_by_pattern(field, pattern)
-
 
 
 	# combines multiple given fields into one field, representing the previous values by a pseudonym
@@ -113,9 +103,6 @@ class TableData:
 			ds.combine_fields_to_pseudonym(fieldnames, pseudonym_table)
 
 
-
-
-
 	# pseudonymizes the given field
 	# if Error occurred: return -1
 	def pseudonymize_one(self, fieldname, pseudonym_table=None, readable: bool = True):
@@ -135,7 +122,6 @@ class TableData:
 			ds.set_pseudonym(fieldname, pseudonym_table)
 
 
-
 	# builds the pseudonym table from the current table for the given fields
 	def build_pseudonym_table(self, fieldnames, readable, new_field_name: str = None) -> PseudonymTable:
 		pseudo_table = PseudonymTable.PseudonymTable(readable, fieldnames, new_fieldname=new_field_name)
@@ -149,7 +135,6 @@ class TableData:
 			return None
 
 		return pseudo_table
-
 
 
 	def __str__(self):

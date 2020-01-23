@@ -36,6 +36,7 @@ class ErrorValues:
 	NOT_SET_YET = -4
 	WORD_TOO_SHORT = -5
 	ALREADY_SET = -6
+	STRING_EMPTY = -7
 
 
 logging.basicConfig(format='%(asctime)s %(name)-30s %(levelname)-8s %(message)s')
