@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 from xml.etree.ElementTree import Element
 
 from objects import AnonymizationPattern
@@ -118,11 +118,11 @@ class ConfigurationXml:
 	input_directory: str
 	output_directory: str
 
-	tables: List[TableConfig]
+	tables: Dict
 
 
 	def __init__(self):
-		self.tables = []
+		self.tables = {}
 		pass
 
 
@@ -154,14 +154,15 @@ class ConfigurationXml:
 			Logger.log_too_many_found_in_xml(xt.OUTPUT_DIR, 1, len(e_output_dir))
 		self.output_directory = e_output_dir[0].text
 
-		# iterate over tables
+		# #########################################################################################
+		# get all TABLES
 		e_tables: List[Element] = configuration.findall(xt.TABLE)
 		if len(e_tables) < 1:
 			return Logger.log_not_found_in_xml(xt.TABLE, True)
 
 		e_table: Element
 		for e_table in e_tables:
-			# get table name
+			# get TABLE NAME
 			if xt.TABLENAME in e_table.attrib:
 				a_name = e_table.attrib[xt.TABLENAME]
 			else:
@@ -300,5 +301,28 @@ class ConfigurationXml:
 
 						config_table.add_pseudonymize(config_pseudonym_col)
 
-			self.tables.append(config_table)
+			self.tables[config_table.table_name] = config_table
 		return 1
+
+
+	# GETTER #################################################################
+	# ########################################################################
+	def get_tables(self) -> Dict:
+		Logger.log_method(__name__)
+		if self.tables is None:
+			Logger.log_none_type_error('tables')
+			return {}
+		return self.tables
+
+	def get_table_by_name(self, name: str):
+		Logger.log_method(__name__)
+		# check none
+		if name is None:
+			Logger.log_none_type_error('name')
+			return None
+
+		if name in self.get_tables():
+			Logger.log_key_not_found_error(name)
+			return None
+
+		return self.get_tables()[name]
