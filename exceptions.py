@@ -68,16 +68,15 @@ class Logger:
 			return Logger.log_none_type_error("Object or type")
 
 		log.error(f"{objectname} is not instance of {type}!")
-
 		return ErrorValues.INSTANCE_ERROR
 
 
 	@staticmethod
-	def log_key_not_found_error(key: str):
+	def log_key_not_found_error(key: str, dictionary_name: str = 'dictionary', location: str = ''):
 		if key is None:
 			return Logger.log_none_type_error('key')
 
-		log.warning(f"{key}: Key not found in dictionary!")
+		log.warning(f"{key}: Key not found in {dictionary_name}{'' if ((location == '') or (location is None)) else ' at ' + location}!")
 		return ErrorValues.KEY_NOT_FOUND
 
 

@@ -11,13 +11,13 @@ from exceptions import Logger
 class TableData:
 	filename = None
 	column_names = None
-	datasets: dict
+	datasets: list
 
 	pseudonym_tables: Dict = {}
 
 
 	def __init__(self, filename):
-		self.datasets = {}
+		self.datasets = []
 		self.filename = filename
 
 
@@ -50,7 +50,7 @@ class TableData:
 			return Logger.log_instance_error('Data', 'list')
 
 		for idxRow in range(len(data)):
-			dataset = DataSet.DataSet()
+			dataset = DataSet.DS()
 			for idxCol in range(len(data[idxRow])):
 				try:
 					dataset.add_to_values(self.column_names[idxCol], data[idxRow][idxCol])
@@ -98,7 +98,7 @@ class TableData:
 				return -1
 			self.pseudonym_tables[common.generate_dict_key(fieldnames)] = pseudonym_table
 
-		ds: DataSet.DataSet
+		ds: DataSet.DS
 		for ds in self.datasets:
 			ds.combine_fields_to_pseudonym(fieldnames, pseudonym_table)
 
@@ -117,7 +117,7 @@ class TableData:
 		elif isinstance(pseudonym_table, PseudonymTable.PseudonymTable):
 			return Logger.log_instance_error('pseudonym_table', 'PseudonymTable')
 		# set the pseudonyms in every dataset
-		ds: DataSet.DataSet
+		ds: DataSet.DS
 		for ds in self.datasets:
 			ds.set_pseudonym(fieldname, pseudonym_table)
 
@@ -160,7 +160,7 @@ class TableData:
 
 		key = common.generate_dict_key(fieldnames)
 		if key not in self.pseudonym_tables:
-			Logger.log_key_not_found_error(str(key))
+			Logger.log_key_not_found_error(str(key), 'pseudonym_tables', self.filename)
 			return None
 
 		return self.pseudonym_tables[key]

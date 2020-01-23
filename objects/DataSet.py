@@ -7,7 +7,7 @@ from objects import PseudonymTable
 from objects.AnonymizationPattern import Pattern
 
 
-class DataSet:
+class DS:
 	values = None
 
 
@@ -16,7 +16,7 @@ class DataSet:
 		if key in self.values:
 			return ex.Logger.log_already_in_dictionary(key)
 
-		self.values[str(key)] = DataSet.extract_entries(value)
+		self.values[str(key)] = DS.extract_entries(value)
 		# ex.Logger.log_debug_value_added(key, value)
 
 
@@ -89,7 +89,7 @@ class DataSet:
 
 	# sets the value of a field to itself, masked by the given pattern
 	def set_fieldvalue_by_pattern(self, fieldname, pattern: str = None):
-		new_value = DataSet.get_pattern_value(self.values[fieldname], pattern)
+		new_value = DS.get_pattern_value(self.values[fieldname], pattern)
 		# change the value of a field by a given pattern
 		self.replace_value(fieldname, new_value)
 
@@ -150,7 +150,7 @@ class DataSet:
 		if key in self.values:
 			return self.values[key]
 		else:
-			ex.Logger.log_key_not_found_error(key)
+			ex.Logger.log_key_not_found_error(key, 'DataSet')
 			return None
 
 

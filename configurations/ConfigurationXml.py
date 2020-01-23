@@ -30,9 +30,12 @@ class LinkConfig(object):
 	table_columns: List[str]
 
 
-	def __init__(self, table_name: str = None, table_column: str = None):
+	def __init__(self, table_name: str = None, table_columns: List[str] = None):
 		self.table_name = table_name
-		self.table_column = table_column
+		if table_columns is None:
+			self.table_columns = []
+		else:
+			self.table_columns = table_columns
 
 
 	def set_table_name(self, name: str):
@@ -310,7 +313,7 @@ class ConfigurationXml:
 							if e_linktable is not None:
 								e_linkcolumns: List[Element] = e_link.findall(xt.LINK_FIELD)
 								if e_linkcolumns is not None:
-									linkconfig = LinkConfig(e_linktable)
+									linkconfig = LinkConfig(e_linktable.text)
 									for link_col in e_linkcolumns:
 										linkconfig.add_table_column(link_col.text)
 									config_pseudonym_col.set_link(linkconfig)
@@ -342,7 +345,7 @@ class ConfigurationXml:
 			return None
 
 		if name in self.get_tables():
-			Logger.log_key_not_found_error(name)
+			Logger.log_key_not_found_error(name, 'XML Configuration')
 			return None
 
 		return self.get_tables()[name]
