@@ -2,10 +2,17 @@
 <configuration>
 	<inputdirectory>D:\Projects\Anonymization\Datenschutz-IAM</inputdirectory>
 	<outputdirectory>[OUTPUT-DIRECTORY-PATH]</outputdirectory>
-	<table tablename="SAP_Marketing_Usage_Stats.csv">
+	<table tablename="HR.csv">
+		<columns_pseudonym>
+			<column readable="true">
+				<name>EmployeeNr</name>
+			</column>
+		</columns_pseudonym>
+	</table>
+	<table tablename="AD.csv">
 		<columns_anonym>
 			<column>
-				<name>SAP Permission</name>
+				<name>sAMAccountName</name>
 				<pattern>
 					<front>2</front>
 					<end>2</end>
@@ -17,53 +24,19 @@
 		</columns_anonym>
 		<columns_pseudonym>
 			<column id="1">
-				<name>column3</name>
+				<name>EmployeeNr</name>
 				<link>
-					<link_table>Org.csv</link_table>
-					<link_field>EmployeeNumber</link_field>
+					<link_table>HR.csv</link_table>
+					<link_field>EmployeeNr</link_field>
 				</link>
 			</column>
 			<column id="2">
-				<name>column4</name>
-				<name>column5</name>
+				<name>location</name>
+				<name>memberof</name>
 				<newfieldname>CombinedField</newfieldname>
 			</column>
 			<column readable="false">
-				<name>column6</name>
-			</column>
-		</columns_pseudonym>
-
-	</table>
-
-    <table tablename="table2">
-		<columns_anonym>
-			<column>
-				<name>column1</name>
-				<pattern>
-					<front>2</front>
-					<end>2</end>
-					<between>1</between>
-				</pattern>
-			</column>
-			<column>
-				<name>column2</name>
-			</column>
-		</columns_anonym>
-		<columns_pseudonym>
-			<column>
-				<name>column3</name>
-				<link>
-					<link_table>HV.csv</link_table>
-					<link_field>EmployeeNumber</link_field>
-				</link>
-			</column>
-			<column>
-				<name>column4</name>
-				<name>column5</name>
-				<newfieldname>CombinedField</newfieldname>
-			</column>
-			<column readable="true">
-				<name>column6</name>
+				<name>accountType</name>
 			</column>
 		</columns_pseudonym>
 

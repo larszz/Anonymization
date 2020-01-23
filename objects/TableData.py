@@ -50,7 +50,7 @@ class TableData:
 			return Logger.log_instance_error('Data', 'list')
 
 		for idxRow in range(len(data)):
-			dataset = DataSet.DS()
+			dataset = DataSet.DataSet()
 			for idxCol in range(len(data[idxRow])):
 				try:
 					dataset.add_to_values(self.column_names[idxCol], data[idxRow][idxCol])
@@ -98,7 +98,7 @@ class TableData:
 				return -1
 			self.pseudonym_tables[common.generate_dict_key(fieldnames)] = pseudonym_table
 
-		ds: DataSet.DS
+		ds: DataSet.DataSet
 		for ds in self.datasets:
 			ds.combine_fields_to_pseudonym(fieldnames, pseudonym_table)
 
@@ -114,10 +114,10 @@ class TableData:
 			if pseudonym_table is None:
 				return -1
 			self.pseudonym_tables[common.generate_dict_key(fieldname)] = pseudonym_table
-		elif isinstance(pseudonym_table, PseudonymTable.PseudonymTable):
+		elif not isinstance(pseudonym_table, PseudonymTable.PseudonymTable):
 			return Logger.log_instance_error('pseudonym_table', 'PseudonymTable')
 		# set the pseudonyms in every dataset
-		ds: DataSet.DS
+		ds: DataSet.DataSet
 		for ds in self.datasets:
 			ds.set_pseudonym(fieldname, pseudonym_table)
 

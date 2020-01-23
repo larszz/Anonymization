@@ -90,6 +90,7 @@ def manipulate_data(config: ConfigurationXml, reader: DataReader):
 
 		anonymize_data(tconfig, table_data)
 		pyseudonymize_data(tconfig, table_data, reader.get_tables())
+		pass
 
 
 

@@ -292,7 +292,8 @@ class ConfigurationXml:
 
 						# get readable if specified
 						if xt.READABLE in e_column_p.attrib:
-							config_pseudonym_col.readable = e_column_p.attrib[xt.READABLE]
+							txt_readable = e_column_p.attrib[xt.READABLE]
+							config_pseudonym_col.readable = (False if txt_readable == 'false' else True )
 
 						# get the new fieldname if specified
 						e_newfieldnames: List[Element] = e_column_p.findall(xt.NEW_FIELD_NAME)
