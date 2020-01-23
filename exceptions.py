@@ -1,4 +1,4 @@
-import logging as log
+import logging
 
 
 class Messages: """
@@ -37,8 +37,11 @@ class ErrorValues:
 	WORD_TOO_SHORT = -5
 	ALREADY_SET = -6
 
-log.basicConfig(format='%(asctime)s %(message)s')
-log.basicConfig(level=log.DEBUG)
+
+logging.basicConfig(format='%(asctime)s %(name)-30s %(levelname)-8s %(message)s')
+log = logging.getLogger('AnonymLogger')
+log.setLevel(level=logging.DEBUG)
+
 
 class Logger:
 
