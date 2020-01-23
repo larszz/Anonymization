@@ -2,7 +2,7 @@ import csv
 import logging as log
 import os
 from os import DirEntry
-from typing import List
+from typing import List, Dict
 
 import exceptions as ex
 import configurations.Configuration_simple as conf
@@ -13,21 +13,24 @@ from exceptions import Logger
 
 
 class DataReader:
-	tables: List[td.TableData]
+	tables: Dict[str, td.TableData]
 
 
 	def __init__(self):
-		self.tables = []
+		self.tables = {}
+
 
 	def add_table(self, table: td.TableData):
 		if table is None:
 			return Logger.log_none_type_error('table')
-		self.tables.append(table)
-
+		if table.filename is None:
+			return Logger.log_none_type_error('filename of table')
+		self.tables[table.filename] = table
 
 	def readFiles(self, directory, verbose=False):
 
-
+	def readFiles(self, directory):
+		counter: int = 0
 		log.debug("Directory:\t{0}".format(str(directory)))
 		# iterate over found files in directory
 		files = os.scandir(directory)
@@ -76,7 +79,27 @@ class DataReader:
 
 	def read_xml_conf(self, configuration: ConfigurationXml, verbose=False):
 		directory = configuration.input_directory
-		self.readFiles(directory, verbose)
+		self.readFiles(directory)
+
+
+	########################################################################
+	# GETTER ###############################################################
+	def get_tables(self):
+		if self.tables is None:
+			Logger.log_none_type_error('tables')
+			return {}
+		return self.tables
+
+
+	def get_table_by_name(self, table_name: str):
+		# check none
+		if table_name is None:
+			return Logger.log_none_type_error('table')
+
+		if table_name not in self.tables:
+			return Logger.log_key_not_found_error(table_name)
+
+		return self.tables[table_name]
 
 
 def getColumnNames(firstrow):
