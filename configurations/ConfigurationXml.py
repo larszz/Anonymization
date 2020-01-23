@@ -87,6 +87,10 @@ class ColPseudonymConfig(object):
 		self.link = link
 
 
+##########################################################################
+# GETTER #################################################################
+
+
 # stores whole information about table configuration
 class TableConfig(object):
 	table_name: str
@@ -111,6 +115,22 @@ class TableConfig(object):
 		if new_config is None:
 			return Logger.log_none_type_error('new_config')
 		self.pseudonymize.append(new_config)
+
+
+	##########################################################################
+	# GETTER #################################################################
+	def get_anonymize(self):
+		if self.anonymize is None:
+			Logger.log_none_type_error('self.anonymize')
+			return []
+		return self.anonymize
+
+
+	def get_pseudonymize(self):
+		if self.pseudonymize is None:
+			Logger.log_none_type_error('self.pseudonymize')
+			return []
+		return self.pseudonymize
 
 
 # stores the whole configuration

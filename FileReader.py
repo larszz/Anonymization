@@ -27,7 +27,6 @@ class DataReader:
 			return Logger.log_none_type_error('filename of table')
 		self.tables[table.filename] = table
 
-	def readFiles(self, directory, verbose=False):
 
 	def readFiles(self, directory):
 		counter: int = 0
@@ -48,7 +47,7 @@ class DataReader:
 			with open(filename, 'r') as file:
 				csv_reader = csv.reader(file, delimiter=v.delimiters.csv.PRIMARY, quotechar=v.delimiters.csv.QUOTECHAR)
 				tabledata = td.TableData(filename.name)
-				i = 0
+
 				try:
 					rows = extractLines(csv_reader)
 
@@ -60,24 +59,17 @@ class DataReader:
 						Logger.log_added_with_errors()
 
 					# add tables to the input data
+					counter += 1
 					self.add_table(tabledata)
 
 
 				except ex.ColumnNameError as cne:
 					log.warning(cne.message)
 					continue
-
-		if verbose:
-			for t in self.tables:
-				print(t.long_string())
-		else:
-			for t in self.tables:
-				print(t)
-
-		return self.tables
+		log.info(f"Finished reading. Found {str(counter)} tables.")
 
 
-	def read_xml_conf(self, configuration: ConfigurationXml, verbose=False):
+	def read_by_xml_config(self, configuration: ConfigurationXml):
 		directory = configuration.input_directory
 		self.readFiles(directory)
 
@@ -91,13 +83,15 @@ class DataReader:
 		return self.tables
 
 
-	def get_table_by_name(self, table_name: str):
+	def get_table_by_name(self, table_name: str) -> td.TableData:
 		# check none
 		if table_name is None:
-			return Logger.log_none_type_error('table')
+			Logger.log_none_type_error('table')
+			return None
 
 		if table_name not in self.tables:
-			return Logger.log_key_not_found_error(table_name)
+			Logger.log_key_not_found_error(table_name)
+			return None
 
 		return self.tables[table_name]
 

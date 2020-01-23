@@ -56,6 +56,13 @@ class Logger:
 
 
 	@staticmethod
+	def log_method(methodname: str):
+		if methodname is None:
+			return Logger.log_none_type_error('methodname')
+		log.info(f"Method called: {methodname}")
+
+
+	@staticmethod
 	def log_instance_error(objectname: str, type: str):
 		if (objectname is None) or (type is None):
 			return Logger.log_none_type_error("Object or type")
@@ -163,3 +170,11 @@ class Logger:
 		if should_be is None:
 			return Logger.log_none_type_error('should_be')
 		log.info(f"File '{filename}' is skipped due to wrong file type. (should be: {should_be})")
+
+
+	@staticmethod
+	def log_string_empty(name: str):
+		if name is None:
+			return Logger.log_none_type_error('name')
+		log.warning(f"String {name} is empty. Skipping")
+		return ErrorValues.STRING_EMPTY

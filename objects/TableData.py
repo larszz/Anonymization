@@ -13,7 +13,7 @@ class TableData:
 	column_names = None
 	datasets: dict
 
-	pseudonym_tables = {}
+	pseudonym_tables: Dict = {}
 
 
 	def __init__(self, filename):
@@ -151,3 +151,16 @@ class TableData:
 		for d in self.datasets:
 			output += str(d) + '\n'
 		return str(output)
+
+
+	def get_pseudonym_table_from_fieldnames(self, fieldnames: List):
+		Logger.log_method(__name__)
+		if fieldnames is None:
+			return Logger.log_none_type_error('fieldnames')
+
+		key = common.generate_dict_key(fieldnames)
+		if key not in self.pseudonym_tables:
+			Logger.log_key_not_found_error(str(key))
+			return None
+
+		return self.pseudonym_tables[key]

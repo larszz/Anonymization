@@ -17,7 +17,7 @@ class DataSet:
 			return ex.Logger.log_already_in_dictionary(key)
 
 		self.values[str(key)] = DataSet.extract_entries(value)
-		ex.Logger.log_debug_value_added(key, value)
+		# ex.Logger.log_debug_value_added(key, value)
 
 
 
