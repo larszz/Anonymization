@@ -104,3 +104,5 @@ if __name__ == '__main__':
 		reader.read_by_xml_config(config)
 
 		manipulate_data(config, reader)
+
+		pass

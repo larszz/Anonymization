@@ -80,7 +80,7 @@ class DataSet:
 		if pseudonym is None:
 			return -3
 
-		self.replace_value(fieldname, pseudonym)
+		self.replace_value(fieldname, [pseudonym])
 
 
 
@@ -93,13 +93,13 @@ class DataSet:
 			return ex.Logger.log_key_not_found_error(fieldname, 'self.values', 'DataSet')
 		new_value = DataSet.get_pattern_value(self.values[fieldname], pattern)
 		# change the value of a field by a given pattern
-		self.replace_value(fieldname, new_value)
+		self.replace_value(fieldname, [new_value])
 
 
 
 	# sets the value of a field to a random hex number
 	def set_fieldvalue_random(self, fieldname):
-		self.replace_value(fieldname, common.get_random_colval())
+		self.replace_value(fieldname, [common.get_random_colval()])
 
 
 
@@ -159,7 +159,6 @@ class DataSet:
 
 	# changes the value depending on the given pattern,
 	# i.e. to show only the first two digits and exchange the rest by stars *
-	# TODO: implement
 	@staticmethod
 	def get_pattern_value(value: str, pattern: Pattern):
 		# check none
@@ -171,15 +170,3 @@ class DataSet:
 			return -1
 
 		return value
-
-
-"""
-	@staticmethod
-	def get_new_fieldname(keys):
-		separator = '_'
-		output = ""
-		for k in keys:
-			output += str(k) + separator
-		output = output.rstrip(separator)
-		return output
-"""

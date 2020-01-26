@@ -48,7 +48,9 @@ class PseudonymTable:
 		if key_tuple in self.values:
 			return
 
-		self.values[key_tuple] = self.generate_pseudonym()
+		new_pseudonym = self.generate_pseudonym()
+		self.values[key_tuple] = new_pseudonym
+		return new_pseudonym
 
 
 	# adds the
@@ -97,17 +99,19 @@ class PseudonymTable:
 		return 1
 
 
-	# ----------------------------------------------
-	# GETTER
+	##########################################################################################
+	# GETTER #################################################################################
 
 	# returns the pseudonym (tuple) for directly given keys
 	def get_pseudonym(self, keys):
 		key_tuple = self.generate_key_value(keys)
-		try:
+		if key_tuple not in self.values:
+			Logger.log_key_not_found_error(str(key_tuple), 'self.values', '"PseudonymTable.get_pseudonym"')
+			new_pseudonym = self.add_value(key_tuple)
+			Logger.log_debug_new_pseudonym_created(str(key_tuple), new_pseudonym)
+			return new_pseudonym
+		else:
 			return self.values[key_tuple]
-		except KeyError as ke:
-			log.error(str(ke) + ": Key not found in dictionary!")
-			return None
 
 
 	# tries to find all values in dataset to generate a dictionary key with;

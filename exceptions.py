@@ -177,3 +177,13 @@ class Logger:
 			return Logger.log_none_type_error('name')
 		log.warning(f"String {name} is empty. Skipping")
 		return ErrorValues.STRING_EMPTY
+
+
+	@staticmethod
+	def log_debug_new_pseudonym_created(key: str, pseudonym: str):
+		if key is None:
+			return Logger.log_none_type_error('key')
+		if pseudonym is None:
+			return Logger.log_none_type_error('pseudonym')
+
+		log.debug(f"New pseudonym '{pseudonym}' created (key: {key})")
