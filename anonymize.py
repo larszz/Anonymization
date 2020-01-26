@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from exceptions import log
+from exceptions import log, ErrorValues
 
 from FileReader import DataReader
 from exceptions import Logger
@@ -33,7 +33,6 @@ def search_for_link(link: LinkConfig, all_tables: Dict):
 
 # iterating over every anonymize configurations and anonymize column if it can be found
 def anonymize_data(config: TableConfig, data: TableData):
-	Logger.log_method(__name__)
 	# check none
 	if config is None:
 		return Logger.log_none_type_error('config')
@@ -41,13 +40,16 @@ def anonymize_data(config: TableConfig, data: TableData):
 		return Logger.log_none_type_error('data')
 
 	anonym_config: List[ColAnonymConfig] = config.get_anonymize()
+	error_count = 0
 	for conf in anonym_config:
-		data.anonymize_one(conf.column_name, conf.delete, conf.pattern)
+		err = data.anonymize_one(conf.column_name, conf.delete, conf.pattern)
+		if err > ErrorValues.DEFAULT_ERROR:
+			error_count += err
+
 
 
 
 def pyseudonymize_data(config: TableConfig, data: TableData, all_tables: Dict):
-	Logger.log_method(__name__)
 	# check none
 	if config is None:
 		return Logger.log_none_type_error('config')
@@ -59,7 +61,9 @@ def pyseudonymize_data(config: TableConfig, data: TableData, all_tables: Dict):
 	pseudonym_config: List[ColPseudonymConfig] = config.get_pseudonymize()
 	for conf in pseudonym_config:
 		# get linked pseudo table if specified
-		pseudonym_table: PseudonymTable = search_for_link(conf.link, all_tables)
+		pseudonym_table: PseudonymTable = None
+		if conf.link is not None:
+			pseudonym_table = search_for_link(conf.link, all_tables)
 
 		if len(conf.column_names) == 1:
 			data.pseudonymize_one(conf.column_names[0], pseudonym_table, conf.readable)
@@ -74,6 +78,7 @@ def pyseudonymize_data(config: TableConfig, data: TableData, all_tables: Dict):
 
 #
 def manipulate_data(config: ConfigurationXml, reader: DataReader):
+	log.info('--------------------------- MANIPULATION ---------------------------')
 	# check none
 	if config is None:
 		return Logger.log_none_type_error('config')
@@ -84,11 +89,14 @@ def manipulate_data(config: ConfigurationXml, reader: DataReader):
 	table_configs: Dict = config.get_tables()
 	for tconfig in table_configs.values():
 		table_data: TableData = reader.get_table_by_name(tconfig.table_name)
+
+		log.info('---------------------------------------------------------')
+		log.info(f'--------- TABLE: {tconfig.table_name} ---------')
 		# if no table found in data, skip that config
 		if table_data is None:
-			print(f"Table not found:\t{tconfig.table_name}")
+			log.warning(f"Table not found:\t{tconfig.table_name}")
 			continue
-		print(f"Manipulate Table:\t{table_data.filename}")
+		log.info(f"Manipulate Table:\t{table_data.filename}")
 		anonymize_data(tconfig, table_data)
 		pyseudonymize_data(tconfig, table_data, reader.get_tables())
 		pass

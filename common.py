@@ -34,7 +34,7 @@ def generate_dict_key(keys) -> tuple:
 
 def generate_combined_field_name(fieldnames: List[str]):
 	if fieldnames is None:
-		return Logger.log_none_type_error('fieldnames')
+		return Logger.log_none_type_error('columnnames')
 
 	output: str = "gen"
 	for fn in fieldnames:

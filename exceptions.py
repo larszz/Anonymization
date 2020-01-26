@@ -29,7 +29,7 @@ class ColumnNameError(Exception):
 
 
 class ErrorValues:
-	DEFAULT_ERROR = 0
+	DEFAULT_ERROR = -1
 	NONETYPE = -1
 	INSTANCE_ERROR = -2
 	KEY_NOT_FOUND = -3
@@ -187,3 +187,14 @@ class Logger:
 			return Logger.log_none_type_error('pseudonym')
 
 		log.debug(f"New pseudonym '{pseudonym}' created (key: {key})")
+
+
+	@staticmethod
+	def log_info_table_manipulation_finished(tablename: str, manipulation_type: str, error_count: int):
+		log.info(f"{tablename}:\tFinished '{manipulation_type}'\t(Incorrect manipulations: {str(error_count)})")
+		return
+
+
+	@staticmethod
+	def log_info_replaced_column_names(tablename: str, old_columns: list, new_column: str):
+		log.info(f"Replaced in {tablename}: {','.join(old_columns)}\t by {new_column}")

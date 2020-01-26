@@ -3,7 +3,7 @@ import common
 import exceptions as ex
 import helper as h
 import values as v
-from objects import PseudonymTable
+from objects import PseudonymTable, AnonymizationPattern
 from objects.AnonymizationPattern import Pattern
 
 
@@ -31,10 +31,10 @@ class DataSet:
 	# PSEUDONYMIZATION
 
 	# replaces the given values with one pseudonym
-	def combine_fields_to_pseudonym(self, fieldnames, pseudonym_table):
+	def combine_fields_to_pseudonym(self, fieldnames, pseudonym_table) -> int:
 		# check none
 		if fieldnames is None:
-			ex.Logger.log_none_type_error('fieldnames')
+			ex.Logger.log_none_type_error('columnnames')
 			return -1
 		if pseudonym_table is None:
 			ex.Logger.log_none_type_error('pseudonym_table')
@@ -55,6 +55,7 @@ class DataSet:
 			self.values.pop(k)
 
 		self.values[pseudonym_table.get_new_fieldname()] = pseudonym
+		return 1
 
 
 
@@ -62,7 +63,7 @@ class DataSet:
 	def set_pseudonym(self, fieldname, pseudonym_table):
 		# check none
 		if fieldname is None:
-			ex.Logger.log_none_type_error('fieldname')
+			ex.Logger.log_none_type_error('columnname')
 			return -1
 		if pseudonym_table is None:
 			ex.Logger.log_none_type_error('pseudonym_table')
@@ -80,6 +81,7 @@ class DataSet:
 			return -3
 
 		self.replace_value(fieldname, [pseudonym])
+		return 1
 
 
 
@@ -87,13 +89,13 @@ class DataSet:
 	# ANONYMIZATION
 
 	# sets the value of a field to itself, masked by the given pattern
-	def set_fieldvalue_by_pattern(self, fieldname, pattern: str = None):
+	def set_fieldvalue_by_pattern(self, fieldname, pattern: AnonymizationPattern = None):
 		if fieldname not in self.values:
 			return ex.Logger.log_key_not_found_error(fieldname, 'self.values', 'DataSet')
-		# TODO PATTERN
 		new_value = DataSet.get_pattern_value(self.values[fieldname], pattern)
 		# change the value of a field by a given pattern
 		self.replace_value(fieldname, [new_value])
+		return 1
 
 
 
@@ -104,10 +106,11 @@ class DataSet:
 
 	def delete_column(self, fieldname):
 		if fieldname is None:
-			return ex.Logger.log_none_type_error('fieldname')
+			return ex.Logger.log_none_type_error('columnname')
 		if fieldname not in self.values:
 			return ex.Logger.log_key_not_found_error(fieldname, 'self.values', 'DataSet')
 		self.values.pop(fieldname)
+		return 1
 
 
 

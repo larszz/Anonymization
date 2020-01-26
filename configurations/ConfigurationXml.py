@@ -1,3 +1,4 @@
+import logging
 from typing import List, Dict
 from xml.etree.ElementTree import Element
 
@@ -152,6 +153,8 @@ class ConfigurationXml:
 	def read_from_xml(self, config_directory_path: str = None):
 		from values import xml_tags as xt
 
+		logging.info('----------------------- CONFIGURATION LOADING -----------------------')
+
 		path = 'configurations/configuration.xml'
 		full_path = 'D:\Projects\Anonymization\configurations\configuration.xml'
 		tree = ET.parse(full_path)
@@ -301,7 +304,7 @@ class ConfigurationXml:
 							txt_readable = e_column_p.attrib[xt.READABLE]
 							config_pseudonym_col.readable = (False if txt_readable == 'false' else True )
 
-						# get the new fieldname if specified
+						# get the new columnname if specified
 						e_newfieldnames: List[Element] = e_column_p.findall(xt.NEW_FIELD_NAME)
 						if len(e_newfieldnames) > 0:
 							if len(e_newfieldnames) > 1:
