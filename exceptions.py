@@ -90,11 +90,11 @@ class Logger:
 
 
 	@staticmethod
-	def log_word_too_short(name: str, max_length: int):
+	def log_word_too_short(name: str, max_length: int, say_skipping: bool = False):
 		if name is None:
 			return Logger.log_none_type_error('name')
 
-		log.warning(f'{name} is too short for the pattern! (min length: {str(max_length)})')
+		log.warning(f'{name} is too short for the pattern! (min length: {str(max_length)}){"" if not say_skipping else "   Skipping entry."}')
 		return ErrorValues.WORD_TOO_SHORT
 
 

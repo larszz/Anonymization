@@ -21,6 +21,12 @@
 			<column delete="true">
 				<name>givenName</name>
 			</column>
+			<column>
+				<name>lastLogon</name>
+				<pattern>
+					<end>4</end>
+				</pattern>
+			</column>
 		</columns_anonym>
 		<columns_pseudonym>
 			<column id="1">

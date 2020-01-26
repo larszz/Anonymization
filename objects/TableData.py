@@ -3,7 +3,7 @@ from typing import List, Dict
 
 import common
 import helper as h
-from objects import DataSet, PseudonymTable
+from objects import DataSet, PseudonymTable, AnonymizationPattern
 import random
 from exceptions import Logger
 
@@ -66,7 +66,7 @@ class TableData:
 	# anonymizes one given field;
 	# if pattern is set: tries to change the field value depending on the pattern
 	# if no pattern is given, the value will be changed to a random hex number
-	def anonymize_one(self, field, delete: bool, pattern=None):
+	def anonymize_one(self, field, delete: bool, pattern: AnonymizationPattern = None):
 		if field is None:
 			return Logger.log_none_type_error('field')
 		# delete column in every dataset if found

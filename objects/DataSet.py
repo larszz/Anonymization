@@ -175,4 +175,4 @@ class DataSet:
 			ex.Logger.log_none_type_error('pattern')
 			return -1
 
-		return value
+		return pattern.mask_by_pattern(value)
