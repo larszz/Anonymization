@@ -18,7 +18,7 @@
 					<end>2</end>
 				</pattern>
 			</column>
-			<column>
+			<column delete="true">
 				<name>column2</name>
 			</column>
 		</columns_anonym>

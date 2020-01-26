@@ -10,11 +10,13 @@ import xml.etree.cElementTree as ET
 class ColAnonymConfig(object):
 	column_name: str
 	pattern: AnonymizationPattern.Pattern = None
+	delete: bool
 
 
-	def __init__(self, column_name: str, pattern: AnonymizationPattern.Pattern = None):
+	def __init__(self, column_name: str, pattern: AnonymizationPattern.Pattern = None, delete: bool = False):
 		self.column_name = column_name
 		self.pattern = pattern
+		self.delete = delete
 
 
 	def set_pattern(self, pattern: AnonymizationPattern.Pattern):
@@ -64,9 +66,6 @@ class ColPseudonymConfig(object):
 
 	def __init__(self, column_names: List[str] = None, readable: bool = True, new_fieldname: str = None,
 				 link: LinkConfig = None):
-		"""if column_names is None:
-			Logger.log_none_type_error('columnnames')
-			return"""
 		if column_names is None:
 			self.column_names = []
 		else:
@@ -151,7 +150,6 @@ class ConfigurationXml:
 
 	# constructor reads config from xml
 	def read_from_xml(self, config_directory_path: str = None):
-		# TODO Implement: read config and set all values
 		from values import xml_tags as xt
 
 		path = 'configurations/configuration.xml'
@@ -213,9 +211,9 @@ class ConfigurationXml:
 					Logger.log_not_found_in_xml(xt.COLUMN)
 				else:
 					# iterate over all found columns which must by anonymized
-					for column_anonym in cols_anonym:
+					for e_column_anonym in cols_anonym:
 						# get column names
-						e_names: List[Element] = column_anonym.findall(xt.NAME)
+						e_names: List[Element] = e_column_anonym.findall(xt.NAME)
 						if len(e_names) < 1:
 							Logger.log_not_found_in_xml('name', skip=True)
 							continue
@@ -225,33 +223,40 @@ class ConfigurationXml:
 						# columns object
 						config_anonym_col = ColAnonymConfig(column_name=e_names[0].text)
 
-						# get pattern, if one found
-						e_patterns = column_anonym.findall(xt.PATTERN)
-						if len(e_patterns) > 0:
-							if len(e_patterns) > 1:
-								Logger.log_too_many_found_in_xml(xt.PATTERN, 1, len(e_patterns))
+						# get delete-boolean
+						if xt.DELETE in e_column_anonym.attrib:
+							str_delete = e_column_anonym.attrib[xt.DELETE]
+							config_anonym_col.delete = (str_delete == 'true')
 
-							PatternConfig = AnonymizationPattern.Pattern()
-							pattern: Element = e_patterns[0]
+						# ignore pattern, if delete is True
+						if not config_anonym_col.delete:
+							# get pattern, if one found
+							e_patterns = e_column_anonym.findall(xt.PATTERN)
+							if len(e_patterns) > 0:
+								if len(e_patterns) > 1:
+									Logger.log_too_many_found_in_xml(xt.PATTERN, 1, len(e_patterns))
 
-							# front
-							e_front: Element = pattern.find(xt.FRONT)
-							if e_front is not None:
-								PatternConfig.set_chars_front(e_front.text)
+								PatternConfig = AnonymizationPattern.Pattern()
+								pattern: Element = e_patterns[0]
 
-							# end
-							e_end: Element = pattern.find(xt.END)
-							if e_end is not None:
-								PatternConfig.set_chars_end(e_end.text)
+								# front
+								e_front: Element = pattern.find(xt.FRONT)
+								if e_front is not None:
+									PatternConfig.set_chars_front(e_front.text)
 
-							# between
-							e_between: Element = pattern.find(xt.BETWEEN)
-							if e_between is not None:
-								PatternConfig.set_between(e_between.text)
+								# end
+								e_end: Element = pattern.find(xt.END)
+								if e_end is not None:
+									PatternConfig.set_chars_end(e_end.text)
 
-							config_anonym_col.set_pattern(PatternConfig)
+								# between
+								e_between: Element = pattern.find(xt.BETWEEN)
+								if e_between is not None:
+									PatternConfig.set_between(e_between.text)
 
-						config_table.add_anonymize(config_anonym_col)
+								config_anonym_col.set_pattern(PatternConfig)
+
+							config_table.add_anonymize(config_anonym_col)
 
 			# #########################################################################################
 			# PSEUDONYMIZATION COLUMNS ################################################################

@@ -15,6 +15,7 @@ class delimiters:
 
 
 class xml_tags:
+	DELETE = 'delete'
 	INPUT_DIR = 'inputdirectory'
 	OUTPUT_DIR = 'outputdirectory'
 	TABLE = 'table'
