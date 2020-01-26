@@ -50,8 +50,7 @@ class DataSet:
 		if pseudonym is None:
 			return -3
 
-		# delete the
-		# values
+		# delete the values
 		for k in fieldnames:
 			self.values.pop(k)
 
@@ -91,6 +90,7 @@ class DataSet:
 	def set_fieldvalue_by_pattern(self, fieldname, pattern: str = None):
 		if fieldname not in self.values:
 			return ex.Logger.log_key_not_found_error(fieldname, 'self.values', 'DataSet')
+		# TODO PATTERN
 		new_value = DataSet.get_pattern_value(self.values[fieldname], pattern)
 		# change the value of a field by a given pattern
 		self.replace_value(fieldname, [new_value])
@@ -102,6 +102,12 @@ class DataSet:
 		self.replace_value(fieldname, [common.get_random_colval()])
 
 
+	def delete_column(self, fieldname):
+		if fieldname is None:
+			return ex.Logger.log_none_type_error('fieldname')
+		if fieldname not in self.values:
+			return ex.Logger.log_key_not_found_error(fieldname, 'self.values', 'DataSet')
+		self.values.pop(fieldname)
 
 
 

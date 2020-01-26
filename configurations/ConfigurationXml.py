@@ -193,6 +193,7 @@ class ConfigurationXml:
 			config_table: TableConfig = TableConfig(a_name)
 			# #########################################################################################
 			# ANONYMIZATION COLUMNS ###################################################################
+			# get columns_anonym elements (should be exactly one)
 			e_col_anonym: List[Element] = e_table.findall(xt.COLUMNS_ANONYM)
 
 			# skip if no entry found
@@ -256,7 +257,7 @@ class ConfigurationXml:
 
 								config_anonym_col.set_pattern(PatternConfig)
 
-							config_table.add_anonymize(config_anonym_col)
+						config_table.add_anonymize(config_anonym_col)
 
 			# #########################################################################################
 			# PSEUDONYMIZATION COLUMNS ################################################################

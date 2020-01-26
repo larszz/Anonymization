@@ -66,13 +66,21 @@ class TableData:
 	# anonymizes one given field;
 	# if pattern is set: tries to change the field value depending on the pattern
 	# if no pattern is given, the value will be changed to a random hex number
-	def anonymize_one(self, field, pattern=None):
-		if pattern is None:
+	def anonymize_one(self, field, delete: bool, pattern=None):
+		if field is None:
+			return Logger.log_none_type_error('field')
+		# delete column in every dataset if found
+		if delete:
 			for ds in self.datasets:
-				ds.set_fieldvalue_random(field)
+				ds.delete_column(field)
 		else:
-			for ds in self.datasets:
-				ds.set_fieldvalue_by_pattern(field, pattern)
+			# if column is not deleted: generate a value for field, random or by pattern
+			if pattern is None:
+				for ds in self.datasets:
+					ds.set_fieldvalue_random(field)
+			else:
+				for ds in self.datasets:
+					ds.set_fieldvalue_by_pattern(field, pattern)
 
 
 	# combines multiple given fields into one field, representing the previous values by a pseudonym

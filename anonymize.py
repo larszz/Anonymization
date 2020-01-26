@@ -42,7 +42,7 @@ def anonymize_data(config: TableConfig, data: TableData):
 
 	anonym_config: List[ColAnonymConfig] = config.get_anonymize()
 	for conf in anonym_config:
-		data.anonymize_one(conf.column_name, conf.pattern)
+		data.anonymize_one(conf.column_name, conf.delete, conf.pattern)
 
 
 
@@ -86,8 +86,9 @@ def manipulate_data(config: ConfigurationXml, reader: DataReader):
 		table_data: TableData = reader.get_table_by_name(tconfig.table_name)
 		# if no table found in data, skip that config
 		if table_data is None:
+			print(f"Table not found:\t{tconfig.table_name}")
 			continue
-
+		print(f"Manipulate Table:\t{table_data.filename}")
 		anonymize_data(tconfig, table_data)
 		pyseudonymize_data(tconfig, table_data, reader.get_tables())
 		pass

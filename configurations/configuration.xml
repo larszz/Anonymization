@@ -19,7 +19,7 @@
 				</pattern>
 			</column>
 			<column delete="true">
-				<name>column2</name>
+				<name>givenName</name>
 			</column>
 		</columns_anonym>
 		<columns_pseudonym>
