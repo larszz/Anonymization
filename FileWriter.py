@@ -35,8 +35,8 @@ class FileWriter:
 				return -1
 
 			# TODO: FOR TESTING
-			with open(f'{self.config.output_directory}\\{com.get_filename_with_time(tablename)}','w', newline='') as csvfile:
-				writer = csv.writer(csvfile, delimiter=values.delimiters.csv.PRIMARY, quotechar=values.delimiters.csv.QUOTECHAR)
+			with open(f'{self.config.output_directory}\\{com.get_filename_with_time(tablename)}','w', newline='') as file:
+				writer = csv.writer(file, delimiter=values.delimiters.csv.PRIMARY, quotechar=values.delimiters.csv.QUOTECHAR)
 				datasets = table_data.get_all_data_in_csv()
 				writer.writerow(table_data.column_names)
 				for i in range(10):

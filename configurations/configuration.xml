@@ -9,7 +9,7 @@
 			</column>
 		</columns_pseudonym>
 	</table>
-	<table tablename="AD.csv">
+	<table tablename="AD_pseu.csv">
 		<columns_anonym>
 			<column>
 				<name>sAMAccountName</name>

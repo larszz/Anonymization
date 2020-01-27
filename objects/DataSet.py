@@ -187,7 +187,7 @@ class DataSet:
 				# put lines with multiple values into QUOTECHARS, connected by delimiter
 				content = self.values[field]
 				if len(content) > 1:
-					output.append({v.delimiters.csv.PRIMARY.join(content)})
+					output.append(v.delimiters.csv.PRIMARY.join(content))
 				else:
 					output.append(self.values[field][0])
 			else:
