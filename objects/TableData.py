@@ -250,3 +250,14 @@ class TableData:
 			rows.append(ds.to_csv(self.column_names))
 
 		return rows
+
+
+	#####################################################################
+	# ANONYMITY TESTS ###################################################
+	def get_ordered_datasets(self) -> List:
+		retlist = []
+		ds: DataSet.DataSet
+		for ds in self.datasets:
+			retlist.append(ds.get_values_alphabetically_ordered())
+		return retlist
+

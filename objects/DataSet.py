@@ -1,4 +1,3 @@
-
 from typing import List
 
 import common
@@ -194,3 +193,15 @@ class DataSet:
 				output.append('')
 
 		return output
+
+
+	#####################################################################
+	# ANONYMITY TESTS ###################################################
+	def get_values_alphabetically_ordered(self):
+		out: list = []
+		for key in self.values:
+			original_val: list = self.values[key]
+			copy_val = original_val.copy()
+			sorted(copy_val, key=str.lower)
+			out.append('--'.join(copy_val))
+		return '|'.join(out)

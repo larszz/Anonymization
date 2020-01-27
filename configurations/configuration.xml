@@ -8,6 +8,17 @@
 				<name>EmployeeNr</name>
 			</column>
 		</columns_pseudonym>
+		<columns_anonym>
+			<column delete="true">
+				<name>givenName</name>
+			</column>
+			<column delete="true">
+				<name>lastName</name>
+			</column>
+			<column delete="true">
+				<name>mailAddress</name>
+			</column>
+		</columns_anonym>
 	</table>
 	<table tablename="AD_orig.csv">
 		<columns_anonym>

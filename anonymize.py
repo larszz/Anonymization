@@ -1,5 +1,6 @@
 from typing import List, Dict
 
+import AnonymityTests
 from exceptions import log, ErrorValues
 
 from FileReader import DataReader
@@ -135,6 +136,8 @@ if __name__ == '__main__':
 		reader.read_by_xml_config(config)
 
 		manipulate_data(config, reader)
+
+		AnonymityTests.k_anonymity(config, reader)
 
 		write_data_to_csv(config, reader)
 

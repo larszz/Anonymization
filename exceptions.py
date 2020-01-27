@@ -222,6 +222,11 @@ class Logger:
 
 
 	@staticmethod
+	def log_k_anonymity(tablename: str, k_value: int):
+		log.info(f"K-Anonymity for {tablename}:\t{str(k_value)}")
+
+
+	@staticmethod
 	def log_info_headline1(headline: str):
 		if headline is None:
 			return Logger.log_none_type_error('headline')
