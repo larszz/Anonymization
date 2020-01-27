@@ -109,9 +109,7 @@ def manipulate_data(config: ConfigurationXml, reader: DataReader):
 		if table_data is None:
 			Logger.log_table_not_found(tconfig.table_name)
 			continue
-		log.info(f"Manipulate Table:\t{table_data.filename}")
 		anonymize_data(tconfig, table_data)
-
 		pyseudonymize_data(tconfig, table_data, reader.get_tables())
 		pass
 

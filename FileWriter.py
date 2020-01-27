@@ -24,9 +24,7 @@ class FileWriter:
 
 
 	def write_data(self):
-		log.info('----------------------------------------------------------------------------')
-		log.info('----------------------------------------------------------------------------')
-		log.info('------------------------------- FILE WRITING -------------------------------')
+		Logger.log_info_headline1('file writing')
 
 		# create directory with current date to store the generated information in
 		directory_name = f"{values.filenames.DATA}_{com.get_current_time()}"
@@ -41,18 +39,11 @@ class FileWriter:
 		# iterate over table config
 		tablename: TableConfig
 		for tablename in self.config.get_tables():
+			log.info(f"Write Table:\t{tablename}")
 			table_data: td.TableData = self.reader.get_table_by_name(tablename)
 			if table_data is None:
 				return -1
 
-
-
-
-
-
-
-
-			# TODO: FOR TESTING
 			with open(os.path.join(self.config.output_directory, directory_name, tablename),'w', newline='') as file:
 				writer = csv.writer(file, delimiter=values.delimiters.csv.PRIMARY, quotechar=values.delimiters.csv.QUOTECHAR)
 				datasets = table_data.get_all_data_in_csv()
@@ -60,4 +51,4 @@ class FileWriter:
 				for i in range(10):
 					writer.writerow(datasets[i])
 
-				pass
+			log.info("\tFinished.")

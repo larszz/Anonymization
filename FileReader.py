@@ -30,19 +30,19 @@ class DataReader:
 
 	def readFiles(self, directory):
 		counter: int = 0
-		log.debug("Directory:\t{0}".format(str(directory)))
 		# iterate over found files in directory
 		files = os.scandir(directory)
-		filename: DirEntry
+
+		Logger.log_info_headline1(f'READ FROM DIRECTORY: {directory}')
 		for filename in files:
 			# exclude sub directories from reading
 			if not (os.path.isfile(os.path.join(directory, filename))):
 				continue
 			if not (str(filename.name).endswith('.csv')):
-				ex.Logger.log_info_wrong_file_type(filename, '.csv')
+				ex.Logger.log_info_wrong_file_type(filename.name, '.csv')
 				continue
 
-			log.debug(f"Filename:\t{str(directory)}")
+			ex.log.info(f"Reading File:\t{filename.name}")
 
 			with open(filename, 'r') as file:
 				csv_reader = csv.reader(file, delimiter=v.delimiters.csv.PRIMARY, quotechar=v.delimiters.csv.QUOTECHAR)
@@ -66,7 +66,6 @@ class DataReader:
 				except ex.ColumnNameError as cne:
 					log.warning(cne.message)
 					continue
-		log.info(f"Finished reading. Found {str(counter)} tables.")
 
 
 	def read_by_xml_config(self, configuration: ConfigurationXml):

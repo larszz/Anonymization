@@ -45,8 +45,8 @@ log.setLevel(level=logging.DEBUG)
 
 
 class Logger:
-	SEPERATOR1: str = '##################################################################################'
-	SEPERATOR2: str = '####################################################'
+	SEPERATOR1: str = '#################################################################################################'
+	SEPERATOR2: str = '##################################################################'
 
 
 	@staticmethod
@@ -137,7 +137,7 @@ class Logger:
 			return Logger.log_none_type_error('name')
 
 		log.info(f"{name} found too often in XML! (should be: {str(should_be)}; is: {str(actual)})\n"
-					f"Continue with first found element.")
+				 f"Continue with first found element.")
 		return ErrorValues.DEFAULT_ERROR
 
 
@@ -195,9 +195,15 @@ class Logger:
 
 
 	@staticmethod
-	def log_info_table_manipulation_finished(tablename: str, manipulation_type: str, error_count: int):
-		log.info(f"{tablename}:\tFinished '{manipulation_type}'\t(Incorrect manipulations: {str(error_count)})")
+	def log_info_table_manipulation_started(tablename: str, manipulation_type: str):
+		log.info(f"{tablename}:\t start '{manipulation_type}'")
 		return
+
+
+	@staticmethod
+	def log_info_table_manipulation_finished(error_count: int = -1):
+		log.info(f"\tFinished.{f' (Incorrect: {error_count})' if (error_count > (-1)) else ''}")
+		log.info('')
 
 
 	@staticmethod
@@ -209,8 +215,9 @@ class Logger:
 	def log_table_not_found(tablename):
 		log.warning(f"Table not found:\t{tablename}")
 
+
 	@staticmethod
-	def log_table_does_not_contain_column(columnname:str, table:str=None):
+	def log_table_does_not_contain_column(columnname: str, table: str = None):
 		log.warning(f"This table{f' ({table})'} does not countain the column '{columnname}'")
 
 
@@ -220,6 +227,7 @@ class Logger:
 			return Logger.log_none_type_error('headline')
 		log.info('')
 		log.info(Logger.SEPERATOR1)
+		log.info(Logger.SEPERATOR1)
 		log.info(f'####### {headline.upper()}')
 
 
@@ -227,5 +235,6 @@ class Logger:
 	def log_info_headline2(headline: str):
 		if headline is None:
 			return Logger.log_none_type_error('headline')
+		log.info('')
 		log.info(Logger.SEPERATOR2)
 		log.info(f'### {headline.upper()}')

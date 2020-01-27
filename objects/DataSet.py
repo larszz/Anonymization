@@ -1,4 +1,4 @@
-import logging as log
+
 from typing import List
 
 import common
@@ -141,7 +141,7 @@ class DataSet:
 		try:
 			return self.values[item]
 		except KeyError as ke:
-			log.error(ke)
+			ex.log.error(ke)
 
 
 	# returns a value from the values-dict

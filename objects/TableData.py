@@ -1,11 +1,10 @@
-import logging as log
 from typing import List, Dict
 
 import common
 import helper as h
 from objects import DataSet, PseudonymTable, AnonymizationPattern
 import random
-from exceptions import Logger, ErrorValues
+from exceptions import Logger, ErrorValues, log
 
 
 class TableData:
@@ -73,6 +72,8 @@ class TableData:
 	def anonymize_one(self, field, delete: bool, pattern: AnonymizationPattern = None):
 		if field is None:
 			return Logger.log_none_type_error('field')
+
+		Logger.log_info_table_manipulation_started(self.filename, f'Anonymize One ({field})')
 		# delete column in every dataset if found
 		error_count = 0
 		if delete:
@@ -93,8 +94,7 @@ class TableData:
 					if out < 1:
 						error_count += 1
 
-		Logger.log_info_table_manipulation_finished(self.filename, f'Anonymize One ({field})', error_count)
-
+		Logger.log_info_table_manipulation_finished(error_count)
 		return error_count
 
 
@@ -108,6 +108,8 @@ class TableData:
 		if new_field_name is None:
 			new_field_name = common.generate_combined_field_name(columnnames)
 
+		Logger.log_info_table_manipulation_started(self.filename, f'Pseudonymize Many ({",".join(columnnames)})')
+
 		# check instance
 		if (pseudonym_table is not None) and not isinstance(pseudonym_table, PseudonymTable.PseudonymTable):
 			return Logger.log_instance_error('pseudonym_table', 'PseudonymTable')
@@ -117,7 +119,6 @@ class TableData:
 			pseudonym_table = self.get_pseudonym_table_from_fieldnames(columnnames)
 			if pseudonym_table is None:
 				return -1
-
 
 		error_count = 0
 		ds: DataSet.DataSet
@@ -131,9 +132,7 @@ class TableData:
 		self.add_fieldname(new_field_name)
 
 		Logger.log_info_replaced_column_names(self.filename, columnnames, new_field_name)
-		Logger.log_info_table_manipulation_finished(self.filename, f'Pseudonymize Many ({",".join(columnnames)})',
-													error_count)
-
+		Logger.log_info_table_manipulation_finished(error_count)
 		return error_count
 
 
@@ -142,6 +141,9 @@ class TableData:
 	def pseudonymize_one(self, columnname, pseudonym_table=None, readable: bool = True):
 		if columnname is None:
 			return Logger.log_none_type_error('columnname')
+
+		Logger.log_info_table_manipulation_started(self.filename, f'Pseudonymize One ({columnname})')
+
 		# if no pseudonym table is given, try to get own previously (hopefully) generated pseudonym table
 		if pseudonym_table is None:
 			pseudonym_table = self.get_pseudonym_table_from_fieldnames([columnname])
@@ -158,14 +160,14 @@ class TableData:
 			if err < ErrorValues.DEFAULT_ERROR:
 				error_count += 1
 
-		Logger.log_info_table_manipulation_finished(self.filename, f'Pseudonymize One ({columnname})', error_count)
-
+		Logger.log_info_table_manipulation_finished(error_count)
 		return error_count
 
 
 	# builds the pseudonym table from the current table for the given fields
 	def build_pseudonym_table(self, fieldnames, readable, new_field_name: str = None) -> PseudonymTable:
 		# check if searched fieldnames should actually be existing in this table
+		log.info(f"Build pseudonym table for: {str(fieldnames)}")
 		for f in fieldnames:
 			if f not in self.column_names:
 				Logger.log_table_does_not_contain_column(f, self.filename)
@@ -182,6 +184,7 @@ class TableData:
 			return ret_value
 
 		self.pseudonym_tables[common.generate_dict_key(fieldnames)] = pseudo_table
+		log.info("\tFinished.")
 		return 1
 
 
