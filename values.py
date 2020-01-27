@@ -12,6 +12,8 @@ class delimiters:
 		PRIMARY = ';'
 		SECONDARIES = [',', ';']
 		QUOTECHAR = '"'
+	class files:
+		PSEUDOTABLE_DELIMITER = '__'
 
 
 class xml_tags:
@@ -37,3 +39,8 @@ class xml_tags:
 
 class filenames:
 	DATA = 'Data'
+	PSEUDONYM_TABLES = 'PseudonymTables'
+
+
+class filesuffix:
+	CSV = '.csv'

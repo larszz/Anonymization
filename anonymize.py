@@ -120,7 +120,9 @@ def write_data_to_csv(config: ConfigurationXml, reader: DataReader):
 	if reader is None:
 		return Logger.log_none_type_error('reader', 'write_data_to_csv')
 
+	Logger.log_info_headline1('file writing')
 	file_writer = FileWriter(config, reader)
+	file_writer.write_pseudonym_tables()
 	file_writer.write_data()
 
 

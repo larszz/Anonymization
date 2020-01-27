@@ -2,6 +2,7 @@ import logging as log
 from typing import List
 
 import common
+import values
 from exceptions import Logger, ErrorValues
 
 
@@ -169,3 +170,31 @@ class PseudonymTable:
 			# output a random hex string with 16 digits
 			output += common.get_random_colval()
 		return output
+
+
+	##########################################################################################
+	# CSV ####################################################################################
+	def get_csv_lines(self) -> List:
+		retlist = []
+		retlist.append(self.get_csv_header())
+
+		for val_key in self.values:
+			row = []
+			# add pseudonym
+			row.append(self.values[val_key])
+
+			# add all field values, joined by the primary delimiter (to make later reading from the tables easier)
+			for field_tuple in val_key:
+				row.append(values.delimiters.csv.PRIMARY.join(field_tuple))
+
+			retlist.append(row)
+
+		return retlist
+
+
+	def get_csv_header(self):
+		retlist = []
+		retlist.append(self.get_new_fieldname())
+		for f in self.fieldnames:
+			retlist.append(f)
+		return retlist

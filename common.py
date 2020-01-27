@@ -3,6 +3,8 @@ import os
 from typing import Tuple, Any, List
 
 from datetime import datetime
+
+import values
 from exceptions import Logger
 
 
@@ -65,3 +67,7 @@ def get_filename_with_time(filename: str):
 		Logger.log_none_type_error('filename', 'common.get_filename_with_time')
 		return None
 	return f"{get_current_time()}__{filename}"
+
+
+def get_pseudonymtable_filename(filename:str):
+	return ''+filename+values.filesuffix.CSV

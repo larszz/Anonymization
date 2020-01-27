@@ -238,3 +238,4 @@ class Logger:
 		log.info('')
 		log.info(Logger.SEPERATOR2)
 		log.info(f'### {headline.upper()}')
+		return
