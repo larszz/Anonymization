@@ -33,3 +33,7 @@ class xml_tags:
 	LINK = 'link'
 	LINK_TABLE = 'link_table'
 	LINK_FIELD = 'link_field'
+
+
+class filenames:
+	DATA = 'Data'

@@ -1,5 +1,5 @@
 import csv
-
+import os
 import FileReader
 import objects.TableData as td
 import values
@@ -34,8 +34,21 @@ class FileWriter:
 			if table_data is None:
 				return -1
 
+			# create directory with current date to store the generated information in
+			directory_name = f"{values.filenames.DATA}_{com.get_current_time()}"
+
+			try:
+				os.mkdir(os.path.join(self.config.output_directory,directory_name))
+			except OSError:
+				log.error(f"Creation of directory '{directory_name}' at {self.config.output_directory} failed!")
+			else:
+				log.info(f"Created directory '{directory_name}' at {self.config.output_directory}.")
+
+
+
+
 			# TODO: FOR TESTING
-			with open(f'{self.config.output_directory}\\{com.get_filename_with_time(tablename)}','w', newline='') as file:
+			with open(os.path.join(self.config.output_directory, directory_name, tablename),'w', newline='') as file:
 				writer = csv.writer(file, delimiter=values.delimiters.csv.PRIMARY, quotechar=values.delimiters.csv.QUOTECHAR)
 				datasets = table_data.get_all_data_in_csv()
 				writer.writerow(table_data.column_names)
