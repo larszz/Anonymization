@@ -114,10 +114,10 @@ class TableData:
 
 		# build pseudonym table
 		if pseudonym_table is None:
-			pseudonym_table = self.build_pseudonym_table(columnnames, readable, new_field_name=new_field_name)
+			pseudonym_table = self.get_pseudonym_table_from_fieldnames(columnnames)
 			if pseudonym_table is None:
 				return -1
-			self.pseudonym_tables[common.generate_dict_key(columnnames)] = pseudonym_table
+
 
 		error_count = 0
 		ds: DataSet.DataSet
@@ -131,7 +131,8 @@ class TableData:
 		self.add_fieldname(new_field_name)
 
 		Logger.log_info_replaced_column_names(self.filename, columnnames, new_field_name)
-		Logger.log_info_table_manipulation_finished(self.filename, f'Pseudonymize Many ({",".join(columnnames)})', error_count)
+		Logger.log_info_table_manipulation_finished(self.filename, f'Pseudonymize Many ({",".join(columnnames)})',
+													error_count)
 
 		return error_count
 
@@ -141,12 +142,11 @@ class TableData:
 	def pseudonymize_one(self, columnname, pseudonym_table=None, readable: bool = True):
 		if columnname is None:
 			return Logger.log_none_type_error('columnname')
-		# build a pseudonym table if there is no table given
+		# if no pseudonym table is given, try to get own previously (hopefully) generated pseudonym table
 		if pseudonym_table is None:
-			pseudonym_table = self.build_pseudonym_table(columnname, readable)
+			pseudonym_table = self.get_pseudonym_table_from_fieldnames([columnname])
 			if pseudonym_table is None:
-				return -1
-			self.pseudonym_tables[common.generate_dict_key(columnname)] = pseudonym_table
+				return ErrorValues.NONETYPE
 		elif not isinstance(pseudonym_table, PseudonymTable.PseudonymTable):
 			return Logger.log_instance_error('pseudonym_table', 'PseudonymTable')
 
@@ -160,12 +160,17 @@ class TableData:
 
 		Logger.log_info_table_manipulation_finished(self.filename, f'Pseudonymize One ({columnname})', error_count)
 
-
 		return error_count
 
 
 	# builds the pseudonym table from the current table for the given fields
 	def build_pseudonym_table(self, fieldnames, readable, new_field_name: str = None) -> PseudonymTable:
+		# check if searched fieldnames should actually be existing in this table
+		for f in fieldnames:
+			if f not in self.column_names:
+				Logger.log_table_does_not_contain_column(f, self.filename)
+				return ErrorValues.DEFAULT_ERROR
+
 		pseudo_table = PseudonymTable.PseudonymTable(readable, fieldnames, new_fieldname=new_field_name)
 
 		# shuffle datasets to prevent pseudonyms in the same order as the read datasets
@@ -174,9 +179,10 @@ class TableData:
 
 		ret_value = pseudo_table.build_pseudonyms_from_data(shuffled_datasets)
 		if ret_value < 0:
-			return None
+			return ret_value
 
-		return pseudo_table
+		self.pseudonym_tables[common.generate_dict_key(fieldnames)] = pseudo_table
+		return 1
 
 
 	def __str__(self):
@@ -215,10 +221,13 @@ class TableData:
 		return str(output)
 
 
+	#####################################################################
+	# GETTER ############################################################
+	# returns the a pseudonym table, specified by the given fieldnames
 	def get_pseudonym_table_from_fieldnames(self, fieldnames: List):
-		Logger.log_method(__name__)
 		if fieldnames is None:
-			return Logger.log_none_type_error('columnnames')
+			Logger.log_none_type_error('columnnames')
+			return None
 
 		key = common.generate_dict_key(fieldnames)
 		if key not in self.pseudonym_tables:
@@ -231,12 +240,9 @@ class TableData:
 	#####################################################################
 	# CSV ###############################################################
 	def get_all_data_in_csv(self):
-		ds:DataSet.DataSet
+		ds: DataSet.DataSet
 		rows = []
 		for ds in self.datasets:
 			rows.append(ds.to_csv(self.column_names))
 
-
 		return rows
-
-

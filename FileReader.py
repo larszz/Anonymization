@@ -1,10 +1,10 @@
 import csv
-import logging as log
+
 import os
 from os import DirEntry
 from typing import List, Dict
 
-import exceptions as ex
+import exceptions as ex, logging as log
 import configurations.Configuration_simple as conf
 import objects.TableData as td
 import values as v

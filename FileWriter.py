@@ -27,6 +27,17 @@ class FileWriter:
 		log.info('----------------------------------------------------------------------------')
 		log.info('----------------------------------------------------------------------------')
 		log.info('------------------------------- FILE WRITING -------------------------------')
+
+		# create directory with current date to store the generated information in
+		directory_name = f"{values.filenames.DATA}_{com.get_current_time()}"
+		try:
+			os.mkdir(os.path.join(self.config.output_directory, directory_name))
+		except OSError:
+			log.error(f"Creation of directory '{directory_name}' at {self.config.output_directory} failed!")
+		else:
+			log.info(f"Created directory '{directory_name}' at {self.config.output_directory}.")
+
+
 		# iterate over table config
 		tablename: TableConfig
 		for tablename in self.config.get_tables():
@@ -34,15 +45,9 @@ class FileWriter:
 			if table_data is None:
 				return -1
 
-			# create directory with current date to store the generated information in
-			directory_name = f"{values.filenames.DATA}_{com.get_current_time()}"
 
-			try:
-				os.mkdir(os.path.join(self.config.output_directory,directory_name))
-			except OSError:
-				log.error(f"Creation of directory '{directory_name}' at {self.config.output_directory} failed!")
-			else:
-				log.info(f"Created directory '{directory_name}' at {self.config.output_directory}.")
+
+
 
 
 

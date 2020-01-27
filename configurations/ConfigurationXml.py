@@ -1,9 +1,9 @@
-import logging
+
 from typing import List, Dict
 from xml.etree.ElementTree import Element
 
 from objects import AnonymizationPattern
-from exceptions import Logger
+from exceptions import Logger, log
 import xml.etree.cElementTree as ET
 
 
@@ -153,11 +153,11 @@ class ConfigurationXml:
 	def read_from_xml(self, config_directory_path: str = None):
 		from values import xml_tags as xt
 
-		logging.info('----------------------- CONFIGURATION LOADING -----------------------')
+		Logger.log_info_headline1('configuration reading')
 
 		path = 'configurations/configuration.xml'
 		full_path = 'D:\Projects\Anonymization\configurations\configuration.xml'
-		tree = ET.parse(full_path)
+		tree = ET.parse(path)
 		configuration = tree.getroot()
 
 		# get input directory
@@ -341,14 +341,12 @@ class ConfigurationXml:
 	# GETTER #################################################################
 	# ########################################################################
 	def get_tables(self) -> Dict:
-		Logger.log_method(__name__)
 		if self.tables is None:
 			Logger.log_none_type_error('tables')
 			return {}
 		return self.tables
 
 	def get_table_by_name(self, name: str):
-		Logger.log_method(__name__)
 		# check none
 		if name is None:
 			Logger.log_none_type_error('name')

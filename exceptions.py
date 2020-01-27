@@ -45,9 +45,12 @@ log.setLevel(level=logging.DEBUG)
 
 
 class Logger:
+	SEPERATOR1: str = '##################################################################################'
+	SEPERATOR2: str = '####################################################'
+
 
 	@staticmethod
-	def log_none_type_error(fieldname: str, location:str = None):
+	def log_none_type_error(fieldname: str, location: str = None):
 		if fieldname is None:
 			return ErrorValues.NONETYPE
 
@@ -76,7 +79,8 @@ class Logger:
 		if key is None:
 			return Logger.log_none_type_error('key')
 
-		log.warning(f"{key}: Key not found in {dictionary_name}{'' if ((location == '') or (location is None)) else ' at ' + location}!")
+		log.warning(
+			f"{key}: Key not found in {dictionary_name}{'' if ((location == '') or (location is None)) else ' at ' + location}!")
 		return ErrorValues.KEY_NOT_FOUND
 
 
@@ -94,7 +98,8 @@ class Logger:
 		if name is None:
 			return Logger.log_none_type_error('name')
 
-		log.warning(f'{name} is too short for the pattern! (min length: {str(max_length)}){"" if not say_skipping else "   Skipping entry."}')
+		log.warning(
+			f'{name} is too short for the pattern! (min length: {str(max_length)}){"" if not say_skipping else "   Skipping entry."}')
 		return ErrorValues.WORD_TOO_SHORT
 
 
@@ -122,7 +127,7 @@ class Logger:
 			line += " Exiting."
 		if skip:
 			line += " Skipping."
-		log.warning(line)
+		log.debug(line)
 		return ErrorValues.DEFAULT_ERROR
 
 
@@ -131,7 +136,7 @@ class Logger:
 		if name is None:
 			return Logger.log_none_type_error('name')
 
-		log.warning(f"{name} found too often in XML! (should be: {str(should_be)}; is: {str(actual)})\n"
+		log.info(f"{name} found too often in XML! (should be: {str(should_be)}; is: {str(actual)})\n"
 					f"Continue with first found element.")
 		return ErrorValues.DEFAULT_ERROR
 
@@ -180,13 +185,13 @@ class Logger:
 
 
 	@staticmethod
-	def log_debug_new_pseudonym_created(key: str, pseudonym: str):
+	def log_info_new_pseudonym_created(key: str, pseudonym: str):
 		if key is None:
 			return Logger.log_none_type_error('key')
 		if pseudonym is None:
 			return Logger.log_none_type_error('pseudonym')
 
-		log.debug(f"New pseudonym '{pseudonym}' created (key: {key})")
+		log.info(f"New pseudonym '{pseudonym}' created (key: {key})")
 
 
 	@staticmethod
@@ -198,3 +203,29 @@ class Logger:
 	@staticmethod
 	def log_info_replaced_column_names(tablename: str, old_columns: list, new_column: str):
 		log.info(f"Replaced in {tablename}: {','.join(old_columns)}\t by {new_column}")
+
+
+	@staticmethod
+	def log_table_not_found(tablename):
+		log.warning(f"Table not found:\t{tablename}")
+
+	@staticmethod
+	def log_table_does_not_contain_column(columnname:str, table:str=None):
+		log.warning(f"This table{f' ({table})'} does not countain the column '{columnname}'")
+
+
+	@staticmethod
+	def log_info_headline1(headline: str):
+		if headline is None:
+			return Logger.log_none_type_error('headline')
+		log.info('')
+		log.info(Logger.SEPERATOR1)
+		log.info(f'####### {headline.upper()}')
+
+
+	@staticmethod
+	def log_info_headline2(headline: str):
+		if headline is None:
+			return Logger.log_none_type_error('headline')
+		log.info(Logger.SEPERATOR2)
+		log.info(f'### {headline.upper()}')

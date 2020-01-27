@@ -106,9 +106,9 @@ class PseudonymTable:
 	def get_pseudonym(self, keys):
 		key_tuple = self.generate_key_value(keys)
 		if key_tuple not in self.values:
-			Logger.log_key_not_found_error(str(key_tuple), 'self.values', '"PseudonymTable.get_pseudonym"')
+			#Logger.log_key_not_found_error(str(key_tuple), 'self.values', '"PseudonymTable.get_pseudonym"')
 			new_pseudonym = self.add_value(key_tuple)
-			Logger.log_debug_new_pseudonym_created(str(key_tuple), new_pseudonym)
+			Logger.log_info_new_pseudonym_created(str(key_tuple), new_pseudonym)
 			return new_pseudonym
 		else:
 			return self.values[key_tuple]

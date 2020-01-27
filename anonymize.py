@@ -31,7 +31,6 @@ def search_for_link(link: LinkConfig, all_tables: Dict):
 	return table_data.get_pseudonym_table_from_fieldnames(link_fields)
 
 
-
 # iterating over every anonymize configurations and anonymize column if it can be found
 def anonymize_data(config: TableConfig, data: TableData):
 	# check none
@@ -46,8 +45,6 @@ def anonymize_data(config: TableConfig, data: TableData):
 		err = data.anonymize_one(conf.column_name, conf.delete, conf.pattern)
 		if err > ErrorValues.DEFAULT_ERROR:
 			error_count += err
-
-
 
 
 def pyseudonymize_data(config: TableConfig, data: TableData, all_tables: Dict):
@@ -72,33 +69,49 @@ def pyseudonymize_data(config: TableConfig, data: TableData, all_tables: Dict):
 			data.pseudonymize_many(conf.column_names, pseudonym_table, conf.readable, conf.new_fieldname)
 
 
+def build_pseudonym_tables(config: ConfigurationXml, reader: DataReader):
+	# iterate over table_configs
+	Logger.log_info_headline1('generate pseudonym tables')
+	table_configs: Dict = config.get_tables()
+	for tconfig in table_configs.values():
+		Logger.log_info_headline2(tconfig.table_name)
+		table_data: TableData = reader.get_table_by_name(tconfig.table_name)
+		if table_data is None:
+			Logger.log_table_not_found(tconfig.table_name)
+			continue
+
+		pseudonym_config: List[ColPseudonymConfig] = tconfig.get_pseudonymize()
+		for conf in pseudonym_config:
+			# if pseudonym field has not link (so the table has to be generated), build that pseudonym table
+			if conf.link is None:
+				table_data.build_pseudonym_table(conf.column_names, conf.readable, conf.new_fieldname)
+	pass
 
 
-
-
-
-#
 def manipulate_data(config: ConfigurationXml, reader: DataReader):
-	log.info('--------------------------- MANIPULATION ---------------------------')
 	# check none
 	if config is None:
 		return Logger.log_none_type_error('config')
 	if reader is None:
 		return Logger.log_none_type_error('reader')
 
-	# iterate over every table in config
+	# generate all pseudonym tables before pseudonymization, to be able to reference a table before it has been pseudonymized
+	build_pseudonym_tables(config, reader)
+
+	# iterate over every table in config and apply the configured changes
+	Logger.log_info_headline1('manipulation')
 	table_configs: Dict = config.get_tables()
 	for tconfig in table_configs.values():
 		table_data: TableData = reader.get_table_by_name(tconfig.table_name)
+		Logger.log_info_headline2(tconfig.table_name)
 
-		log.info('---------------------------------------------------------')
-		log.info(f'--------- TABLE: {tconfig.table_name} ---------')
 		# if no table found in data, skip that config
 		if table_data is None:
-			log.warning(f"Table not found:\t{tconfig.table_name}")
+			Logger.log_table_not_found(tconfig.table_name)
 			continue
 		log.info(f"Manipulate Table:\t{table_data.filename}")
 		anonymize_data(tconfig, table_data)
+
 		pyseudonymize_data(tconfig, table_data, reader.get_tables())
 		pass
 
@@ -111,7 +124,6 @@ def write_data_to_csv(config: ConfigurationXml, reader: DataReader):
 
 	file_writer = FileWriter(config, reader)
 	file_writer.write_data()
-
 
 
 if __name__ == '__main__':
