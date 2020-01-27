@@ -174,7 +174,6 @@ class DataSet:
 
 	#####################################################################
 	# CSV ###############################################################
-	# TODO: eigene CSV-Line-Methode implementieren, vorgefertigte funktionieren anscheinend nicht wie gewollt
 	def to_csv(self, fieldorder: List) -> str:
 		if fieldorder is None:
 			ex.Logger.log_none_type_error('fieldorder', 'DataSet.to_csv')

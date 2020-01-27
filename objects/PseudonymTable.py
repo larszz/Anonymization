@@ -2,7 +2,7 @@ import logging as log
 from typing import List
 
 import common
-from exceptions import Logger
+from exceptions import Logger, ErrorValues
 
 
 class PseudonymTable:
@@ -53,7 +53,7 @@ class PseudonymTable:
 		return new_pseudonym
 
 
-	# adds the
+	# adds the data from a dataset to the pseudonym table
 	def add_value_from_dataset(self, dataset):
 		# check none
 		if dataset is None:
@@ -67,13 +67,10 @@ class PseudonymTable:
 		value_list = []
 		for fn in self.fieldnames:
 			field_value = dataset.get_value(fn)
-			# if the inserted value is a list, iterate over every list element and insert it as a string
-			if isinstance(field_value, list):
-				for val in field_value:
-					value_list.append(str(val))
+			if field_value is None:
+				return ErrorValues.NONETYPE
+			value_list.append(field_value)
 			# if inserted value is not a list, just insert that value as a string
-			else:
-				value_list.append(str(field_value))
 
 		# add the combined value
 		self.add_value(value_list)
@@ -107,7 +104,7 @@ class PseudonymTable:
 		key_tuple = self.generate_key_value(keys)
 		if key_tuple not in self.values:
 			#Logger.log_key_not_found_error(str(key_tuple), 'self.values', '"PseudonymTable.get_pseudonym"')
-			new_pseudonym = self.add_value(key_tuple)
+			new_pseudonym = self.add_value(keys)
 			Logger.log_info_new_pseudonym_created(str(key_tuple), new_pseudonym)
 			return new_pseudonym
 		else:
@@ -125,17 +122,19 @@ class PseudonymTable:
 		# execute
 		key_list = []
 		for fn in self.fieldnames:
-			value = dataset.get_value(fn)
-			if value is None:
+			ds_value = dataset.get_value(fn)
+			if ds_value is None:
 				Logger.log_key_not_found_error(fn)
 				return None
 
 			# if the fieldvalue is a list, add all subvalues to list
+			key_list.append(ds_value)
+			"""
 			if isinstance(value, list):
 				for subvalue in value:
 					key_list.append(subvalue)
 			else:
-				key_list.append(value)
+				key_list.append(value)"""
 		return self.get_pseudonym(key_list)
 
 

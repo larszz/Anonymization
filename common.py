@@ -21,16 +21,27 @@ def generate_dict_key(keys) -> tuple:
 		Logger.log_none_type_error('keys')
 		return
 
-	# if keys are already a tuple, return that tuple
-	if not isinstance(keys, tuple):
-		# keys are a list
-		if isinstance(keys, list):
-			return tuple(str(i) for i in keys)
-		# keys is actually only one key
-		else:
-			t: Tuple[Any] = (str(keys),)
-			return t
-	return keys
+	if isinstance(keys, tuple):
+		return keys
+	if not isinstance(keys, list):
+		keys = [keys]
+
+	return to_tuple(keys)
+
+
+def to_tuple(value):
+	if value is None:
+		Logger.log_none_type_error('value', 'common.to_tuple')
+		return None
+	if isinstance(value, tuple):
+		return value
+	if isinstance(value, list):
+		ret_list = []
+		for x in value:
+			ret_list.append(to_tuple(x))
+		return tuple(i for i in ret_list)
+	else:
+		return str(value)
 
 
 def generate_combined_field_name(fieldnames: List[str]):
