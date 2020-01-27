@@ -2,6 +2,7 @@ import binascii
 import os
 from typing import Tuple, Any, List
 
+from datetime import datetime
 from exceptions import Logger
 
 
@@ -42,3 +43,14 @@ def generate_combined_field_name(fieldnames: List[str]):
 	output = output.replace(' ', '')
 	return output
 
+
+def get_current_time() -> str:
+	now = datetime.now()
+	return now.strftime("%Y-%m-%d_%H-%M-%S")
+
+
+def get_filename_with_time(filename: str):
+	if filename is None:
+		Logger.log_none_type_error('filename', 'common.get_filename_with_time')
+		return None
+	return f"{get_current_time()}__{filename}"

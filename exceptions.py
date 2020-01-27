@@ -47,11 +47,11 @@ log.setLevel(level=logging.DEBUG)
 class Logger:
 
 	@staticmethod
-	def log_none_type_error(fieldname: str):
+	def log_none_type_error(fieldname: str, location:str = None):
 		if fieldname is None:
 			return ErrorValues.NONETYPE
 
-		log.error(f"{fieldname} is NoneType!")
+		log.error(f"{fieldname}{'' if location is None else f' at {location}'} is NoneType!")
 		return ErrorValues.NONETYPE
 
 

@@ -226,3 +226,17 @@ class TableData:
 			return None
 
 		return self.pseudonym_tables[key]
+
+
+	#####################################################################
+	# CSV ###############################################################
+	def get_all_data_in_csv(self):
+		ds:DataSet.DataSet
+		rows = []
+		for ds in self.datasets:
+			rows.append(ds.to_csv(self.column_names))
+
+
+		return rows
+
+

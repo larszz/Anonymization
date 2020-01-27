@@ -8,6 +8,7 @@ from configurations.ConfigurationXml import ConfigurationXml, TableConfig, ColAn
 	LinkConfig
 from objects.PseudonymTable import PseudonymTable
 from objects.TableData import TableData
+from FileWriter import FileWriter
 
 
 # searchs in all tables for the right table and there for the right pseudo table
@@ -102,6 +103,15 @@ def manipulate_data(config: ConfigurationXml, reader: DataReader):
 		pass
 
 
+def write_data_to_csv(config: ConfigurationXml, reader: DataReader):
+	if config is None:
+		return Logger.log_none_type_error('config', 'write_data_to_csv')
+	if reader is None:
+		return Logger.log_none_type_error('reader', 'write_data_to_csv')
+
+	file_writer = FileWriter(config, reader)
+	file_writer.write_data()
+
 
 
 if __name__ == '__main__':
@@ -113,5 +123,7 @@ if __name__ == '__main__':
 		reader.read_by_xml_config(config)
 
 		manipulate_data(config, reader)
+
+		write_data_to_csv(config, reader)
 
 		pass

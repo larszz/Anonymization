@@ -1,4 +1,6 @@
 import logging as log
+from typing import List
+
 import common
 import exceptions as ex
 import helper as h
@@ -11,20 +13,20 @@ class DataSet:
 	values = None
 
 
-
 	def add_to_values(self, key, value):
 		if key in self.values:
 			return ex.Logger.log_already_in_dictionary(key)
 
 		self.values[str(key)] = DataSet.extract_entries(value)
-		# ex.Logger.log_debug_value_added(key, value)
+
+
+	# ex.Logger.log_debug_value_added(key, value)
 
 
 
 	# replaces the value for given key
 	def replace_value(self, key, value):
 		self.values[key] = value
-
 
 
 	# ------------------------------------------
@@ -54,9 +56,8 @@ class DataSet:
 		for k in fieldnames:
 			self.values.pop(k)
 
-		self.values[pseudonym_table.get_new_fieldname()] = pseudonym
+		self.values[pseudonym_table.get_new_fieldname()] = [pseudonym]
 		return 1
-
 
 
 	# sets the value for the given field name to the previous generated pseudonym, selected from the given PseudonymTable
@@ -84,7 +85,6 @@ class DataSet:
 		return 1
 
 
-
 	# ------------------------------------------
 	# ANONYMIZATION
 
@@ -94,9 +94,8 @@ class DataSet:
 			return ex.Logger.log_key_not_found_error(fieldname, 'self.values', 'DataSet')
 		new_value = DataSet.get_pattern_value(self.values[fieldname], pattern)
 		# change the value of a field by a given pattern
-		self.replace_value(fieldname, [new_value])
+		self.replace_value(fieldname, new_value)
 		return 1
-
 
 
 	# sets the value of a field to a random hex number
@@ -113,7 +112,6 @@ class DataSet:
 		return 1
 
 
-
 	# tries to split a given value string into multiple values, depending on the set secondary delimiters
 	@staticmethod
 	def extract_entries(valuestring):
@@ -128,7 +126,6 @@ class DataSet:
 		return [valuestring]
 
 
-
 	def __str__(self):
 		output = ""
 		for val in self.values:
@@ -136,10 +133,8 @@ class DataSet:
 		return output
 
 
-
 	def __init__(self):
 		self.values = {}
-
 
 
 	def __getitem__(self, item):
@@ -147,9 +142,6 @@ class DataSet:
 			return self.values[item]
 		except KeyError as ke:
 			log.error(ke)
-
-
-
 
 
 	# returns a value from the values-dict
@@ -165,7 +157,6 @@ class DataSet:
 			return None
 
 
-
 	# changes the value depending on the given pattern,
 	# i.e. to show only the first two digits and exchange the rest by stars *
 	@staticmethod
@@ -179,3 +170,28 @@ class DataSet:
 			return -1
 
 		return pattern.mask_by_pattern(value)
+
+
+	#####################################################################
+	# CSV ###############################################################
+	# TODO: eigene CSV-Line-Methode implementieren, vorgefertigte funktionieren anscheinend nicht wie gewollt
+	def to_csv(self, fieldorder: List) -> str:
+		if fieldorder is None:
+			ex.Logger.log_none_type_error('fieldorder', 'DataSet.to_csv')
+			return
+
+		output: list = []
+		field: str
+		for field in fieldorder:
+			if field in self.values:
+				# put lines with multiple values into QUOTECHARS, connected by delimiter
+				content = self.values[field]
+				if len(content) > 1:
+					output.append({v.delimiters.csv.PRIMARY.join(content)})
+				else:
+					output.append(self.values[field][0])
+			else:
+				# append an empty string if field not found
+				output.append('')
+
+		return output
