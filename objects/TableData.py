@@ -19,6 +19,7 @@ class TableData:
 		self.datasets = []
 		self.filename = filename
 		self.column_names = None
+		self.pseudonym_tables = {}
 
 
 	def set_columnnames(self, columnnames: list):
