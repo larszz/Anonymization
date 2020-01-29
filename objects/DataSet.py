@@ -1,5 +1,4 @@
-
-from typing import List
+from typing import List, Dict
 
 import common
 import exceptions as ex
@@ -10,7 +9,7 @@ from objects.AnonymizationPattern import Pattern
 
 
 class DataSet:
-	values = None
+	values: Dict = None
 
 
 	def add_to_values(self, key, value):
@@ -32,8 +31,8 @@ class DataSet:
 	# ------------------------------------------
 	# PSEUDONYMIZATION
 
-	# replaces the given values with one pseudonym
-	def combine_fields_to_pseudonym(self, fieldnames, pseudonym_table) -> int:
+	# replaces the given values by one pseudonym
+	def combine_columns_to_pseudonym(self, fieldnames, pseudonym_table) -> int:
 		# check none
 		if fieldnames is None:
 			ex.Logger.log_none_type_error('columnnames')
@@ -60,7 +59,7 @@ class DataSet:
 		return 1
 
 
-	# sets the value for the given field name to the previous generated pseudonym, selected from the given PseudonymTable
+	# sets the value for the given column name to the previous generated pseudonym, selected from the given PseudonymTable
 	def set_pseudonym(self, fieldname, pseudonym_table):
 		# check none
 		if fieldname is None:
@@ -88,27 +87,27 @@ class DataSet:
 	# ------------------------------------------
 	# ANONYMIZATION
 
-	# sets the value of a field to itself, masked by the given pattern
-	def set_fieldvalue_by_pattern(self, fieldname, pattern: AnonymizationPattern = None):
-		if fieldname not in self.values:
-			return ex.Logger.log_key_not_found_error(fieldname, 'self.values', 'DataSet')
-		new_value = DataSet.get_pattern_value(self.values[fieldname], pattern)
-		# change the value of a field by a given pattern
-		self.replace_value(fieldname, new_value)
+	# sets the value of a column to itself, masked by the given pattern
+	def set_columnvalue_by_pattern(self, columnname, pattern: AnonymizationPattern = None):
+		if columnname not in self.values:
+			return ex.Logger.log_key_not_found_error(columnname, 'self.values', 'DataSet')
+		new_value = DataSet.get_pattern_value(self.values[columnname], pattern)
+		# change the value of a column by a given pattern
+		self.replace_value(columnname, new_value)
 		return 1
 
 
-	# sets the value of a field to a random hex number
-	def set_fieldvalue_random(self, fieldname):
-		self.replace_value(fieldname, [common.get_random_colval()])
+	# sets the value of a column to a random hex number
+	def set_columnvalue_random(self, columnname):
+		self.replace_value(columnname, [common.get_random_colval()])
 
 
-	def delete_column(self, fieldname):
-		if fieldname is None:
+	def delete_column(self, columnname):
+		if columnname is None:
 			return ex.Logger.log_none_type_error('columnname')
-		if fieldname not in self.values:
-			return ex.Logger.log_key_not_found_error(fieldname, 'self.values', 'DataSet')
-		self.values.pop(fieldname)
+		if columnname not in self.values:
+			return ex.Logger.log_key_not_found_error(columnname, 'self.values', 'DataSet')
+		self.values.pop(columnname)
 		return 1
 
 
@@ -174,14 +173,14 @@ class DataSet:
 
 	#####################################################################
 	# CSV ###############################################################
-	def to_csv(self, fieldorder: List) -> str:
-		if fieldorder is None:
-			ex.Logger.log_none_type_error('fieldorder', 'DataSet.to_csv')
+	def to_csv(self, column_order: List) -> str:
+		if column_order is None:
+			ex.Logger.log_none_type_error('column_order', 'DataSet.to_csv')
 			return
 
 		output: list = []
 		field: str
-		for field in fieldorder:
+		for field in column_order:
 			if field in self.values:
 				# put lines with multiple values into QUOTECHARS, connected by delimiter
 				content = self.values[field]
@@ -190,7 +189,19 @@ class DataSet:
 				else:
 					output.append(self.values[field][0])
 			else:
-				# append an empty string if field not found
+				# append an empty string if column not found
 				output.append('')
 
 		return output
+
+
+	#####################################################################
+	# ANONYMITY TESTS ###################################################
+	def get_values_sorted(self):
+		out: list = []
+		for key in self.values:
+			original_val: list = self.values[key]
+			copy_val = original_val.copy()
+			sorted(copy_val, key=str.lower)
+			out.append('--'.join(copy_val))
+		return '|'.join(out)
