@@ -15,16 +15,16 @@
 			</column>
 		</columns_pseudonym>
 		<columns_anonym>
-			<column>
+			<column delete="true">
 				<name>givenName</name>
 			</column>
 			<column>
 				<name>lastName</name>
 			</column>
-			<column>
+			<column delete="true">
 				<name>mailAddress</name>
 			</column>
-			<column>
+			<column delete="true">
 				<name>privateNumber</name>
 			</column>
 		</columns_anonym>
