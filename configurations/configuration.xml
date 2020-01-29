@@ -7,45 +7,47 @@
 			<column readable="true">
 				<name>EmployeeNr</name>
 			</column>
+			<column readable="true">
+				<name>location</name>
+			</column>
+			<column readable="true">
+				<name>EmployeeType</name>
+			</column>
 		</columns_pseudonym>
-	</table>
-	<table tablename="AD_orig.csv">
 		<columns_anonym>
 			<column>
-				<name>sAMAccountName</name>
-				<pattern>
-					<front>2</front>
-					<end>2</end>
-				</pattern>
-			</column>
-			<column delete="true">
 				<name>givenName</name>
 			</column>
 			<column>
-				<name>lastLogon</name>
-				<pattern>
-					<end>4</end>
-				</pattern>
+				<name>lastName</name>
+			</column>
+			<column>
+				<name>mailAddress</name>
+			</column>
+			<column>
+				<name>privateNumber</name>
 			</column>
 		</columns_anonym>
+
+	</table>
+	<table tablename="Org.csv">
 		<columns_pseudonym>
-			<column id="1">
-				<name>EmployeeNr</name>
+			<column readable="true">
+				<name>Name</name>
+			</column>
+		</columns_pseudonym>
+	</table>
+	<table tablename="SAP_Marketing_Usage_Stats.csv">
+		<columns_pseudonym>
+			<column readable="true">
+				<name>Account</name>
 				<link>
 					<link_table>HR.csv</link_table>
 					<link_field>EmployeeNr</link_field>
 				</link>
 			</column>
-			<column id="2">
-				<name>location</name>
-				<name>memberof</name>
-				<newfieldname>CombinedField</newfieldname>
-			</column>
-			<column readable="false">
-				<name>accountType</name>
-			</column>
 		</columns_pseudonym>
-
 	</table>
+
 
 </configuration>
