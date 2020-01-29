@@ -39,7 +39,7 @@ class ErrorValues:
 	STRING_EMPTY = -7
 
 
-logging.basicConfig(format='%(asctime)s %(name)-30s %(levelname)-8s %(message)s')
+logging.basicConfig(format='%(message)s')
 log = logging.getLogger('AnonymLogger')
 log.setLevel(level=logging.DEBUG)
 
@@ -232,10 +232,12 @@ class Logger:
 
 
 	@staticmethod
-	def log_info_headline2(headline: str):
+	def log_info_headline2(headline: str, uppercase: bool = True):
 		if headline is None:
 			return Logger.log_none_type_error('headline')
 		log.info('')
 		log.info(Logger.SEPERATOR2)
-		log.info(f'### {headline.upper()}')
+		if uppercase:
+			headline = headline.upper()
+		log.info(f'### {headline}')
 		return

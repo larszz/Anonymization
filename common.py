@@ -5,7 +5,7 @@ from typing import Tuple, Any, List
 from datetime import datetime
 
 import values
-from exceptions import Logger
+from exceptions import Logger, log
 
 
 def get_random_hex(length=8):
@@ -71,3 +71,9 @@ def get_filename_with_time(filename: str):
 
 def get_pseudonymtable_filename(filename:str):
 	return ''+filename+values.filesuffix.CSV
+
+
+def wait_for_user_input(first_line: str = ''):
+	if (first_line is not None) & (first_line != ''):
+		log.info(first_line)
+	input("Press Enter to continue...\n")

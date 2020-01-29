@@ -1,5 +1,6 @@
 from typing import List, Dict
 
+import common
 from exceptions import log, ErrorValues
 
 from FileReader import DataReader
@@ -133,9 +134,12 @@ if __name__ == '__main__':
 		# if configuration could be loaded, read data from input directory
 		reader = DataReader()
 		reader.read_by_xml_config(config)
+		common.wait_for_user_input()
 
 		manipulate_data(config, reader)
+		common.wait_for_user_input()
 
 		write_data_to_csv(config, reader)
+		common.wait_for_user_input()
 
 		pass
