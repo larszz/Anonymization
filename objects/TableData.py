@@ -84,6 +84,7 @@ class TableData:
 				out = ds.delete_column(column)
 				if out < 1:
 					error_count += 1
+			self.remove_columnnames([column])
 		else:
 			# if column is not deleted: generate a value for column, random or by pattern
 			if pattern is None:
