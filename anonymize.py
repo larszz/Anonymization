@@ -1,5 +1,5 @@
 from typing import List, Dict
-
+from time import sleep
 import common
 from exceptions import log, ErrorValues
 
@@ -98,7 +98,7 @@ def manipulate_data(config: ConfigurationXml, reader: DataReader):
 
 	# generate all pseudonym tables before pseudonymization, to be able to reference a table before it has been pseudonymized
 	build_pseudonym_tables(config, reader)
-
+	common.wait_for_user_input()
 	# iterate over every table in config and apply the configured changes
 	Logger.log_info_headline1('manipulation')
 	table_configs: Dict = config.get_tables()
@@ -112,7 +112,7 @@ def manipulate_data(config: ConfigurationXml, reader: DataReader):
 			continue
 		anonymize_data(tconfig, table_data)
 		pyseudonymize_data(tconfig, table_data, reader.get_tables())
-		pass
+		common.wait_for_user_input()
 
 
 def write_data_to_csv(config: ConfigurationXml, reader: DataReader):
@@ -129,17 +129,22 @@ def write_data_to_csv(config: ConfigurationXml, reader: DataReader):
 
 if __name__ == '__main__':
 	# read configuration
+	common.wait_for_user_input('Started...')
 	config = ConfigurationXml()
 	if config.read_from_xml() > 0:
 		# if configuration could be loaded, read data from input directory
+		common.wait_for_user_input()
 		reader = DataReader()
 		reader.read_by_xml_config(config)
 		common.wait_for_user_input()
 
 		manipulate_data(config, reader)
-		common.wait_for_user_input()
+		common.wait_for_user_input('Manipulation finished.')
 
 		write_data_to_csv(config, reader)
 		common.wait_for_user_input()
+
+		log.info('Finished. Exiting.')
+		sleep(3)
 
 		pass

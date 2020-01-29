@@ -76,4 +76,4 @@ def get_pseudonymtable_filename(filename:str):
 def wait_for_user_input(first_line: str = ''):
 	if (first_line is not None) & (first_line != ''):
 		log.info(first_line)
-	input("Press Enter to continue...\n")
+	input("Press Enter to continue...\n\n\n")
