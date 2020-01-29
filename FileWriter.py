@@ -57,8 +57,7 @@ class FileWriter:
 									quotechar=values.delimiters.csv.QUOTECHAR)
 				datasets = table_data.get_all_data_in_csv()
 				writer.writerow(table_data.column_names)
-				for i in range(10):
-					writer.writerow(datasets[i])
+				writer.writerows(datasets)
 
 			log.info("\tFinished.")
 			log.info('')
