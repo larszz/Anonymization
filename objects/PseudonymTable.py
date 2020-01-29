@@ -114,15 +114,18 @@ class PseudonymTable:
 
 	# tries to find all values in dataset to generate a dictionary key with;
 	# if all are present, tries to return the pseudonym matching the key
-	def get_pseudonym_from_dataset(self, dataset):
+	def get_pseudonym_from_dataset(self, dataset, dataset_fieldname=None):
 		# check none
 		if dataset is None:
 			Logger.log_none_type_error('dataset')
 			return
 
+		# if no new fieldnames are given, use own fieldnames
+		if dataset_fieldname is None:
+			dataset_fieldname = self.fieldnames
 		# execute
 		key_list = []
-		for fn in self.fieldnames:
+		for fn in dataset_fieldname:
 			ds_value = dataset.get_value(fn)
 			if ds_value is None:
 				Logger.log_key_not_found_error(fn)

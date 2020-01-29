@@ -47,7 +47,7 @@ class DataSet:
 			return -2
 
 		# get pseudonym
-		pseudonym = pseudonym_table.get_pseudonym_from_dataset(self)
+		pseudonym = pseudonym_table.get_pseudonym_from_dataset(self, fieldnames)
 		if pseudonym is None:
 			return -3
 
@@ -75,7 +75,7 @@ class DataSet:
 			return -2
 
 		# execute
-		pseudonym = pseudonym_table.get_pseudonym_from_dataset(self)
+		pseudonym = pseudonym_table.get_pseudonym_from_dataset(self, [fieldname])
 		# cancel, if pseudonym has not been found
 		if pseudonym is None:
 			return -3
@@ -100,6 +100,7 @@ class DataSet:
 	# sets the value of a column to a random hex number
 	def set_columnvalue_random(self, columnname):
 		self.replace_value(columnname, [common.get_random_colval()])
+		return 1
 
 
 	def delete_column(self, columnname):
