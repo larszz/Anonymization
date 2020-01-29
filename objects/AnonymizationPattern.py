@@ -72,3 +72,13 @@ class Pattern:
 			if int(self.between) >= 0:
 				self.min_length += int(self.between)
 		return self.min_length
+
+	def __str__(self):
+		output = 'pattern: '
+		if int(self.chars_front) > 0:
+			output += f"front: keep {str(self.chars_front)},"
+		if int(self.chars_end) > 0:
+			output += f"end: keep {str(self.chars_end)},"
+		if int(self.between) != -1:
+			output += f"between exactly {str(self.between)} placeholders"
+		return output
