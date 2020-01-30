@@ -25,6 +25,7 @@ class ColAnonymConfig(object):
 		else:
 			return Logger.log_already_set('pattern')
 
+
 	def __str__(self):
 		output = f'Column: {self.column_name}; '
 		if self.delete:
@@ -66,6 +67,7 @@ class LinkConfig(object):
 			return Logger.log_string_empty('name')
 		self.table_columns.append(name)
 
+
 	def __str__(self):
 		return f"{self.table_name} -> {','.join(self.table_columns)}"
 
@@ -102,6 +104,7 @@ class ColPseudonymConfig(object):
 			return Logger.log_already_set('link')
 		self.link = link
 
+
 	def __str__(self):
 		output = 'Pseudonymize:\t'
 		output += f"Columnnames: {', '.join(self.column_names)}; {'not' if not self.readable else ''} readable; "
@@ -110,6 +113,7 @@ class ColPseudonymConfig(object):
 		if self.link is not None:
 			output += f"Use pseudonyms: {str(self.link)}"
 		return output
+
 
 ##########################################################################
 # GETTER #################################################################

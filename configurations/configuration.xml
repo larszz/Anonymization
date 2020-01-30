@@ -45,6 +45,9 @@
 				<name>accountType</name>
 			</column>
 		</columns_pseudonym>
+		<ignore_in_tests>
+			<column>EmployeeNr</column>
+		</ignore_in_tests>
 
 	</table>
 
