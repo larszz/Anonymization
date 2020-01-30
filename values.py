@@ -35,6 +35,7 @@ class xml_tags:
 	LINK = 'link'
 	LINK_TABLE = 'link_table'
 	LINK_FIELD = 'link_field'
+	IGNORE_IN_TESTS = 'ignore_in_tests'
 
 
 class filenames:

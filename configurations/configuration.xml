@@ -68,6 +68,7 @@
 		</columns_pseudonym>
 		<ignore_in_tests>
 			<column>EmployeeNr</column>
+			<column>xyz</column>
 		</ignore_in_tests>
 
 	</table>

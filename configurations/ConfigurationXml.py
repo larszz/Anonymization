@@ -126,11 +126,14 @@ class TableConfig(object):
 	anonymize: List[ColAnonymConfig]
 	pseudonymize: List[ColPseudonymConfig]
 
+	ignore_in_test: List[str]
+
 
 	def __init__(self, table_name: str = None):
 		self.table_name = table_name
 		self.anonymize = []
 		self.pseudonymize = []
+		self.ignore_in_test = []
 
 
 	def add_anonymize(self, new_config: ColAnonymConfig):
@@ -146,6 +149,13 @@ class TableConfig(object):
 
 
 	##########################################################################
+	# ADDER ##################################################################
+	def add_column_to_ignore(self, column_name: str):
+		if column_name is None:
+			return -1
+		self.ignore_in_test.append(str(column_name))
+
+
 	# GETTER #################################################################
 	def get_anonymize(self):
 		if self.anonymize is None:
@@ -362,6 +372,24 @@ class ConfigurationXml:
 								Logger.log_pattern_error(xt.LINK_TABLE)
 
 						config_table.add_pseudonymize(config_pseudonym_col)
+
+			# #########################################################################################
+			### READ IGNORE IN TEST ###################################################################
+			e_ignore: List[Element] = e_table.findall(xt.IGNORE_IN_TESTS)
+
+			# skip if no entry found
+			if len(e_ignore) > 0:
+				if len(e_to_pseudonymize) > 1:
+					Logger.log_too_many_found_in_xml(xt.IGNORE_IN_TESTS, 1, len(e_ignore))
+
+				# get ignore_in_tests-Element
+				to_ignore = e_ignore[0]
+
+				# iterate over all columns given in parent element
+				cols_ignore: List[Element] = to_ignore.findall(xt.COLUMN)
+
+				for c in cols_ignore:
+					config_table.add_column_to_ignore(c.text)
 
 			self.tables[config_table.table_name] = config_table
 
