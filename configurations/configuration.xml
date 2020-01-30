@@ -30,6 +30,38 @@
 		</columns_anonym>
 
 	</table>
+	<table tablename="AD.csv">
+		<columns_anonym>
+			<column delete="true">
+				<name>DN</name>
+			</column>
+			<column delete="true">
+				<name>sAMAccountName</name>
+			</column>
+			<column delete="true">
+				<name>givenName</name>
+			</column>
+			<column delete="true">
+				<name>lastName</name>
+			</column>
+		</columns_anonym>
+		<columns_pseudonym>
+			<column readable="true">
+				<name>EmployeeNr</name>
+				<link>
+					<link_table>HR.csv</link_table>
+					<link_field>EmployeeNr</link_field>
+				</link>
+			</column>
+			<column readable="true">
+				<name>location</name>
+				<link>
+					<link_table>HR.csv</link_table>
+					<link_field>location</link_field>
+				</link>
+			</column>
+		</columns_pseudonym>
+	</table>
 	<table tablename="Org.csv">
 		<columns_pseudonym>
 			<column readable="true">
