@@ -223,8 +223,8 @@ class Logger:
 
 
 	@staticmethod
-	def log_k_anonymity(tablename: str, k_value: int, ignored: List = []):
-		log.info(f"K-Anonymity for {tablename}:\t{str(k_value)}{'' if len(ignored) <= 0 else ('   ; ignored: ' + ', '.join(ignored))}")
+	def log_k_anonymity(tablename: str, k_value: int, mean_group_size: int, ignored: List = []):
+		log.info(f"K-Anonymity for {tablename}:\t{str(k_value)}  (mean group size: {mean_group_size}){'' if len(ignored) <= 0 else ('   ; ignored: ' + ', '.join(ignored))}")
 
 
 	@staticmethod

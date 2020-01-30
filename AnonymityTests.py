@@ -1,3 +1,5 @@
+from statistics import mean
+
 import FileReader
 from configurations.ConfigurationXml import ConfigurationXml, TableConfig
 from exceptions import Logger
@@ -30,7 +32,8 @@ def k_anonymity(config: ConfigurationXml, reader: FileReader):
 				counting_dict[ds] = 1
 
 		k_value = min(counting_dict.values())
-		Logger.log_k_anonymity(tconfig.table_name, k_value, tconfig.ignore_in_test)
+		mean_group_size = mean(counting_dict.values())
+		Logger.log_k_anonymity(tconfig.table_name, k_value, mean_group_size, tconfig.ignore_in_test)
 		pass
 
 
