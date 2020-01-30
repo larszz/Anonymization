@@ -65,9 +65,9 @@ def pyseudonymize_data(config: TableConfig, data: TableData, all_tables: Dict):
 			pseudonym_table = search_for_link(conf.link, all_tables)
 
 		if len(conf.column_names) == 1:
-			data.pseudonymize_one(conf.column_names[0], pseudonym_table, conf.readable)
+			data.pseudonymize_one(conf.column_names[0], pseudonym_table)
 		elif len(conf.column_names) > 1:
-			data.pseudonymize_many(conf.column_names, pseudonym_table, conf.readable, conf.new_fieldname)
+			data.pseudonymize_many(conf.column_names, pseudonym_table, conf.new_fieldname)
 
 
 def build_pseudonym_tables(config: ConfigurationXml, reader: DataReader):

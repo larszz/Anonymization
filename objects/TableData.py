@@ -8,7 +8,7 @@ from exceptions import Logger, ErrorValues, log
 
 
 class TableData:
-	filename = None
+	filename: str = None
 	column_names: list
 	datasets: list
 
@@ -28,6 +28,7 @@ class TableData:
 		self.column_names = columnnames
 
 
+	# sets the filename if it is not set yet
 	def set_filename(self, filename):
 		if not (self.filename is None):
 			return Logger.log_already_set('Filename')
@@ -35,11 +36,12 @@ class TableData:
 		self.filename = filename
 
 
+	# adds a dataset to the datasets list
 	def add_dataset(self, dataset):
 		self.datasets.append(dataset)
 
 
-	# add the given data, separated into a two-dimensional list
+	# add the given data, separated into a two-dimensional list; generates a dataset from given data and stores it in the datasets list
 	def add_data(self, data):
 		if self.column_names is None:
 			return Logger.log_none_type_error('Columnnames')
@@ -67,31 +69,32 @@ class TableData:
 		return 1
 
 
-	# anonymizes one given field;
-	# if pattern is set: tries to change the field value depending on the pattern
+	# anonymizes one given column;
+	# if pattern is set: tries to change the column value depending on the pattern
 	# if no pattern is given, the value will be changed to a random hex number
-	def anonymize_one(self, field, delete: bool, pattern: AnonymizationPattern = None):
-		if field is None:
-			return Logger.log_none_type_error('field')
+	def anonymize_one(self, column, delete: bool, pattern: AnonymizationPattern = None):
+		if column is None:
+			return Logger.log_none_type_error('column')
 
-		Logger.log_info_table_manipulation_started(self.filename, f'Anonymize One ({field})')
+		Logger.log_info_table_manipulation_started(self.filename, f'Anonymize One ({column})')
 		# delete column in every dataset if found
 		error_count = 0
 		if delete:
 			for ds in self.datasets:
-				out = ds.delete_column(field)
+				out = ds.delete_column(column)
 				if out < 1:
 					error_count += 1
+			self.remove_columnnames([column])
 		else:
-			# if column is not deleted: generate a value for field, random or by pattern
+			# if column is not deleted: generate a value for column, random or by pattern
 			if pattern is None:
 				for ds in self.datasets:
-					out = ds.set_fieldvalue_random(field)
+					out = ds.set_columnvalue_random(column)
 					if out < 1:
 						error_count += 1
 			else:
 				for ds in self.datasets:
-					out = ds.set_fieldvalue_by_pattern(field, pattern)
+					out = ds.set_columnvalue_by_pattern(column, pattern)
 					if out < 1:
 						error_count += 1
 
@@ -99,9 +102,9 @@ class TableData:
 		return error_count
 
 
-	# combines multiple given fields into one field, representing the previous values by a pseudonym
+	# combines multiple given fields into one column, representing the previous values by a pseudonym
 	# i.e. pseudonymize a city and its plz by one pseudonym
-	def pseudonymize_many(self, columnnames: List[str], pseudonym_table=None, readable: bool = False,
+	def pseudonymize_many(self, columnnames: List[str], pseudonym_table=None,
 						  new_field_name: str = None):
 		# check none
 		if columnnames is None:
@@ -124,7 +127,7 @@ class TableData:
 		error_count = 0
 		ds: DataSet.DataSet
 		for ds in self.datasets:
-			err = ds.combine_fields_to_pseudonym(columnnames, pseudonym_table)
+			err = ds.combine_columns_to_pseudonym(columnnames, pseudonym_table)
 			if err <= ErrorValues.DEFAULT_ERROR:
 				error_count += 1
 
@@ -137,9 +140,9 @@ class TableData:
 		return error_count
 
 
-	# pseudonymizes the given field
+	# pseudonymizes the given column
 	# if Error occurred: return -1
-	def pseudonymize_one(self, columnname, pseudonym_table=None, readable: bool = True):
+	def pseudonymize_one(self, columnname, pseudonym_table=None):
 		if columnname is None:
 			return Logger.log_none_type_error('columnname')
 
@@ -166,15 +169,15 @@ class TableData:
 
 
 	# builds the pseudonym table from the current table for the given fields
-	def build_pseudonym_table(self, fieldnames, readable, new_field_name: str = None) -> PseudonymTable:
-		# check if searched fieldnames should actually be existing in this table
-		log.info(f"Build pseudonym table for: {str(fieldnames)}")
-		for f in fieldnames:
+	def build_pseudonym_table(self, columnnames, readable, new_field_name: str = None) -> PseudonymTable:
+		# check if searched columnnames should actually be existing in this table
+		log.info(f"Build pseudonym table for: {str(columnnames)}")
+		for f in columnnames:
 			if f not in self.column_names:
 				Logger.log_table_does_not_contain_column(f, self.filename)
 				return ErrorValues.DEFAULT_ERROR
 
-		pseudo_table = PseudonymTable.PseudonymTable(readable, fieldnames, new_fieldname=new_field_name)
+		pseudo_table = PseudonymTable.PseudonymTable(readable, columnnames, new_fieldname=new_field_name)
 
 		# shuffle datasets to prevent pseudonyms in the same order as the read datasets
 		shuffled_datasets = self.datasets.copy()
@@ -184,7 +187,7 @@ class TableData:
 		if ret_value < 0:
 			return ret_value
 
-		self.pseudonym_tables[common.generate_dict_key(fieldnames)] = pseudo_table
+		self.pseudonym_tables[common.generate_dict_key(columnnames)] = pseudo_table
 		log.info("\tFinished.")
 		return 1
 
@@ -227,7 +230,7 @@ class TableData:
 
 	#####################################################################
 	# GETTER ############################################################
-	# returns the a pseudonym table, specified by the given fieldnames
+	# returns the a pseudonym table, specified by the given columnnames
 	def get_pseudonym_table_from_fieldnames(self, fieldnames: List):
 		if fieldnames is None:
 			Logger.log_none_type_error('columnnames')
@@ -254,10 +257,9 @@ class TableData:
 
 	#####################################################################
 	# ANONYMITY TESTS ###################################################
-	def get_ordered_datasets(self) -> List:
+	def get_sorted_datasets(self) -> List:
 		retlist = []
 		ds: DataSet.DataSet
 		for ds in self.datasets:
-			retlist.append(ds.get_values_alphabetically_ordered())
+			retlist.append(ds.get_values_sorted())
 		return retlist
-

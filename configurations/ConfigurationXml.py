@@ -1,4 +1,3 @@
-
 from typing import List, Dict
 from xml.etree.ElementTree import Element
 
@@ -25,6 +24,18 @@ class ColAnonymConfig(object):
 			self.pattern = pattern
 		else:
 			return Logger.log_already_set('pattern')
+
+
+	def __str__(self):
+		output = f'Column: {self.column_name}; '
+		if self.delete:
+			output += 'delete data'
+		else:
+			if self.pattern is None:
+				output += "replace by random values"
+			else:
+				output += str(self.pattern)
+		return output
 
 
 # stores a table link
@@ -55,6 +66,10 @@ class LinkConfig(object):
 		if name == '':
 			return Logger.log_string_empty('name')
 		self.table_columns.append(name)
+
+
+	def __str__(self):
+		return f"{self.table_name} -> {','.join(self.table_columns)}"
 
 
 # stores information about columns which must be pseudonymized
@@ -88,6 +103,16 @@ class ColPseudonymConfig(object):
 		if self.link is not None:
 			return Logger.log_already_set('link')
 		self.link = link
+
+
+	def __str__(self):
+		output = 'Pseudonymize:\t'
+		output += f"Columnnames: {', '.join(self.column_names)}; {'not' if not self.readable else ''} readable; "
+		if self.new_fieldname is not None:
+			output += f"new name: {self.new_fieldname}; "
+		if self.link is not None:
+			output += f"Use pseudonyms: {str(self.link)}"
+		return output
 
 
 ##########################################################################
@@ -134,6 +159,14 @@ class TableConfig(object):
 			Logger.log_none_type_error('self.pseudonymize')
 			return []
 		return self.pseudonymize
+
+
+	def info_to_log(self):
+		Logger.log_info_headline2(f"Table: {self.table_name}", False)
+		for a in self.anonymize:
+			log.info(str(a))
+		for p in self.pseudonymize:
+			log.info(str(p))
 
 
 # stores the whole configuration
@@ -200,10 +233,7 @@ class ConfigurationXml:
 			e_col_anonym: List[Element] = e_table.findall(xt.COLUMNS_ANONYM)
 
 			# skip if no entry found
-			if len(e_col_anonym) < 1:
-				Logger.log_not_found_in_xml(xt.COLUMNS_ANONYM, skip=True)
-
-			else:
+			if len(e_col_anonym) >= 1:
 				if len(e_col_anonym) > 1:
 					Logger.log_too_many_found_in_xml(xt.COLUMNS_ANONYM, 1, len(e_col_anonym))
 
@@ -219,7 +249,6 @@ class ConfigurationXml:
 						# get column names
 						e_names: List[Element] = e_column_anonym.findall(xt.NAME)
 						if len(e_names) < 1:
-							Logger.log_not_found_in_xml('name', skip=True)
 							continue
 						if len(e_names) > 1:
 							Logger.log_too_many_found_in_xml('name', 1, len(e_names))
@@ -302,7 +331,7 @@ class ConfigurationXml:
 						# get readable if specified
 						if xt.READABLE in e_column_p.attrib:
 							txt_readable = e_column_p.attrib[xt.READABLE]
-							config_pseudonym_col.readable = (False if txt_readable == 'false' else True )
+							config_pseudonym_col.readable = (False if txt_readable == 'false' else True)
 
 						# get the new columnname if specified
 						e_newfieldnames: List[Element] = e_column_p.findall(xt.NEW_FIELD_NAME)
@@ -335,6 +364,9 @@ class ConfigurationXml:
 						config_table.add_pseudonymize(config_pseudonym_col)
 
 			self.tables[config_table.table_name] = config_table
+
+		for t in self.tables.values():
+			t.info_to_log()
 		return 1
 
 
@@ -345,6 +377,7 @@ class ConfigurationXml:
 			Logger.log_none_type_error('tables')
 			return {}
 		return self.tables
+
 
 	def get_table_by_name(self, name: str):
 		# check none
