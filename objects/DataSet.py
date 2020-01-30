@@ -174,7 +174,7 @@ class DataSet:
 
 	#####################################################################
 	# CSV ###############################################################
-	def to_csv(self, column_order: List) -> str:
+	def to_csv(self, column_order: List) -> List:
 		if column_order is None:
 			ex.Logger.log_none_type_error('column_order', 'DataSet.to_csv')
 			return
@@ -198,9 +198,12 @@ class DataSet:
 
 	#####################################################################
 	# ANONYMITY TESTS ###################################################
-	def get_values_sorted(self):
+	def get_test_values(self, ignore_keys: List):
 		out: list = []
 		for key in self.values:
+			# skip ignored keys (columns which should not be part of the test, i.e. UID-Columns)
+			if key in ignore_keys:
+				continue
 			original_val: list = self.values[key]
 			copy_val = original_val.copy()
 			sorted(copy_val, key=str.lower)

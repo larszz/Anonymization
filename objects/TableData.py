@@ -20,6 +20,7 @@ class TableData:
 		self.filename = filename
 		self.column_names = None
 		self.pseudonym_tables = {}
+		self.ignore_in_tests = []
 
 
 	def set_columnnames(self, columnnames: list):
@@ -257,9 +258,9 @@ class TableData:
 
 	#####################################################################
 	# ANONYMITY TESTS ###################################################
-	def get_sorted_datasets(self) -> List:
+	def get_test_data(self, ignore_in_tests: List) -> List:
 		retlist = []
 		ds: DataSet.DataSet
 		for ds in self.datasets:
-			retlist.append(ds.get_values_sorted())
+			retlist.append(ds.get_test_values(ignore_in_tests))
 		return retlist

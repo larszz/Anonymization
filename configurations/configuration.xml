@@ -18,7 +18,17 @@
 			<column delete="true">
 				<name>mailAddress</name>
 			</column>
+			<column delete="true">
+				<name>privateNumber</name>
+			</column>
 		</columns_anonym>
+		<ignore_in_tests>
+			<column>EmployeeNr</column>
+			<column>givenName</column>
+			<column>lastName</column>
+			<column>EmployeeType</column>
+			<column>departmentalHead</column>
+		</ignore_in_tests>
 	</table>
 	<table tablename="AD_orig.csv">
 		<columns_anonym>

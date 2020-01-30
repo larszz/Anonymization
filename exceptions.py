@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 
 class Messages: """
@@ -222,8 +223,8 @@ class Logger:
 
 
 	@staticmethod
-	def log_k_anonymity(tablename: str, k_value: int):
-		log.info(f"K-Anonymity for {tablename}:\t{str(k_value)}")
+	def log_k_anonymity(tablename: str, k_value: int, ignored: List = []):
+		log.info(f"K-Anonymity for {tablename}:\t{str(k_value)}{'' if len(ignored) <= 0 else ('   ; ignored: ' + ', '.join(ignored))}")
 
 
 	@staticmethod
