@@ -80,6 +80,25 @@
 			</column>
 		</columns_pseudonym>
 	</table>
+	<table tablename="SAP_Marketing_Users_Small.csv">
+		<columns_anonym>
+			<column delete="true">
+				<name>Lastname</name>
+			</column>
+			<column delete="true">
+				<name>Firstname</name>
+			</column>
+		</columns_anonym>
+		<columns_pseudonym>
+			<column readable="true">
+				<name>Username</name>
+				<link>
+					<link_table>HR.csv</link_table>
+					<link_field>EmployeeNr</link_field>
+				</link>
+			</column>
+		</columns_pseudonym>
+	</table>
 
 
 </configuration>
