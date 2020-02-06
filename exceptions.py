@@ -29,6 +29,7 @@ class ColumnNameError(Exception):
 		self.message = Messages.COLUMNNAMEERROR.format(str(filename))
 
 
+# own error values to interpret different detected errors
 class ErrorValues:
 	DEFAULT_ERROR = -1
 	NONETYPE = -1
@@ -40,11 +41,14 @@ class ErrorValues:
 	STRING_EMPTY = -7
 
 
+# logging configuration
 logging.basicConfig(format='%(asctime)s %(name)-30s %(levelname)-8s %(message)s')
 log = logging.getLogger('AnonymLogger')
-log.setLevel(level=logging.DEBUG)
+log.setLevel(level=logging.INFO)
 
 
+# manages a lot of default logging methods;
+# in the beginning for easy debugging, now used for program output
 class Logger:
 	SEPERATOR1: str = '#################################################################################################'
 	SEPERATOR2: str = '##################################################################'
@@ -224,7 +228,8 @@ class Logger:
 
 	@staticmethod
 	def log_k_anonymity(tablename: str, k_value: int, mean_group_size: int, ignored: List = []):
-		log.info(f"K-Anonymity for {tablename}:\t{str(k_value)}  (mean group size: {mean_group_size}){'' if len(ignored) <= 0 else ('   ; ignored: ' + ', '.join(ignored))}")
+		log.info(
+			f"K-Anonymity for {tablename}:\t{str(k_value)}  (mean group size: {mean_group_size}){'' if len(ignored) <= 0 else ('   ; ignored: ' + ', '.join(ignored))}")
 
 
 	@staticmethod

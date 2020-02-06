@@ -12,6 +12,7 @@ class DataSet:
 	values: Dict = None
 
 
+	# adds the given value to the values dictionary, using the given key
 	def add_to_values(self, key, value):
 		if key in self.values:
 			return ex.Logger.log_already_in_dictionary(key)
@@ -28,8 +29,8 @@ class DataSet:
 		self.values[key] = value
 
 
-	# ------------------------------------------
-	# PSEUDONYMIZATION
+	################################################################################
+	# PSEUDONYMIZATION #############################################################
 
 	# replaces the given values by one pseudonym
 	def combine_columns_to_pseudonym(self, fieldnames, pseudonym_table) -> int:
@@ -84,8 +85,8 @@ class DataSet:
 		return 1
 
 
-	# ------------------------------------------
-	# ANONYMIZATION
+	################################################################################
+	# ANONYMIZATION ################################################################
 
 	# sets the value of a column to itself, masked by the given pattern
 	def set_columnvalue_by_pattern(self, columnname, pattern: AnonymizationPattern = None):
@@ -103,6 +104,7 @@ class DataSet:
 		return 1
 
 
+	# deletes the given value from the attributes
 	def delete_column(self, columnname):
 		if columnname is None:
 			return ex.Logger.log_none_type_error('columnname')
@@ -115,7 +117,7 @@ class DataSet:
 	# tries to split a given value string into multiple values, depending on the set secondary delimiters
 	@staticmethod
 	def extract_entries(valuestring):
-		for delim in v.delimiters.csv.SECONDARIES:
+		for delim in v.Delimiters.Csv.SECONDARIES:
 			values = str(valuestring).split(delim)
 
 			# return split values, if there is more than 1 entry after split
@@ -186,7 +188,7 @@ class DataSet:
 				# put lines with multiple values into QUOTECHARS, connected by delimiter
 				content = self.values[field]
 				if len(content) > 1:
-					output.append(v.delimiters.csv.PRIMARY.join(content))
+					output.append(v.Delimiters.Csv.PRIMARY.join(content))
 				else:
 					output.append(self.values[field][0])
 			else:

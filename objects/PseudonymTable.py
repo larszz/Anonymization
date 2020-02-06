@@ -71,13 +71,13 @@ class PseudonymTable:
 			if field_value is None:
 				return ErrorValues.NONETYPE
 			value_list.append(field_value)
-			# if inserted value is not a list, just insert that value as a string
+		# if inserted value is not a list, just insert that value as a string
 
 		# add the combined value
 		self.add_value(value_list)
 
 
-	# generate the pseudonyms from given table data
+	# generates the pseudonyms from given table data
 	def build_pseudonyms_from_data(self, datasets: List):
 		# check none
 		if datasets is None:
@@ -104,7 +104,7 @@ class PseudonymTable:
 	def get_pseudonym(self, keys):
 		key_tuple = self.generate_key_value(keys)
 		if key_tuple not in self.values:
-			#Logger.log_key_not_found_error(str(key_tuple), 'self.values', '"PseudonymTable.get_pseudonym"')
+			# Logger.log_key_not_found_error(str(key_tuple), 'self.values', '"PseudonymTable.get_pseudonym"')
 			new_pseudonym = self.add_value(keys)
 			Logger.log_info_new_pseudonym_created(str(key_tuple), new_pseudonym)
 			return new_pseudonym
@@ -150,8 +150,9 @@ class PseudonymTable:
 		return self.new_fieldname
 
 
-	# ----------------------------------------------
-	# HELPER METHODS
+	################################################################################
+	# HELPER METHODS ###############################################################
+
 	# generates the matching key value to the given keys
 	@staticmethod
 	def generate_key_value(keys) -> tuple:
@@ -188,7 +189,7 @@ class PseudonymTable:
 
 			# add all column values, joined by the primary delimiter (to make later reading from the tables easier)
 			for field_tuple in val_key:
-				row.append(values.delimiters.csv.PRIMARY.join(field_tuple))
+				row.append(values.Delimiters.Csv.PRIMARY.join(field_tuple))
 
 			retlist.append(row)
 

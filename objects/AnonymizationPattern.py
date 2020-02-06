@@ -17,6 +17,9 @@ class Pattern:
 		self.between = between
 
 
+	################################################################################
+	# SETTER #######################################################################
+
 	def set_chars_front(self, val: int):
 		if self.chars_front == 0:
 			self.chars_front = val
@@ -38,6 +41,9 @@ class Pattern:
 			return Logger.log_already_set('between')
 
 
+	################################################################################
+	# METHODS ######################################################################
+	# changes the values in given list by the stored pattern
 	def mask_by_pattern(self, plain_list: list) -> list:
 		# check none
 		if plain_list is None:
@@ -60,11 +66,14 @@ class Pattern:
 			if mask_length == -1:
 				mask_length = len(plain) - int(self.chars_front) - int(self.chars_end)
 
-			out_list.append(plain[0:(int(self.chars_front))] + (int(mask_length) * self.mask_char) + plain[-(int(self.chars_end)):])
+			out_list.append(
+				plain[0:(int(self.chars_front))] + (int(mask_length) * self.mask_char) + plain[-(int(self.chars_end)):])
 
 		return out_list
 
 
+	################################################################################
+	# GETTER #######################################################################
 	def get_min_length(self) -> int:
 		# if not already set, set the max length
 		if self.min_length == -1:
@@ -72,6 +81,7 @@ class Pattern:
 			if int(self.between) >= 0:
 				self.min_length += int(self.between)
 		return self.min_length
+
 
 	def __str__(self):
 		output = 'pattern: '

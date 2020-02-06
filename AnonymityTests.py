@@ -6,6 +6,7 @@ from exceptions import Logger
 from objects.TableData import TableData
 
 
+# calculates and logs the k-anonymity of the data in given file reader
 def k_anonymity(config: ConfigurationXml, reader: FileReader):
 	if config is None:
 		return Logger.log_none_type_error('config')
@@ -14,7 +15,7 @@ def k_anonymity(config: ConfigurationXml, reader: FileReader):
 
 	# iterate over every table config
 	tconfig: TableConfig
-	for tconfig in config.get_tables().values():
+	for tconfig in config.get_all_tables().values():
 		table_data: TableData = reader.get_table_by_name(tconfig.table_name)
 		if table_data is None:
 			Logger.log_table_not_found(tconfig.table_name)
@@ -34,7 +35,3 @@ def k_anonymity(config: ConfigurationXml, reader: FileReader):
 		k_value = min(counting_dict.values())
 		mean_group_size = mean(counting_dict.values())
 		Logger.log_k_anonymity(tconfig.table_name, k_value, mean_group_size, tconfig.ignore_in_test)
-		pass
-
-
-

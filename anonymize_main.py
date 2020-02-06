@@ -29,7 +29,7 @@ def search_for_link(link: LinkConfig, all_tables: Dict):
 		return None
 
 	table_data: TableData = all_tables[link_table]
-	return table_data.get_pseudonym_table_from_fieldnames(link_fields)
+	return table_data.get_pseudonym_table_from_columnnames(link_fields)
 
 
 # iterating over every anonymize configurations and anonymize column if it can be found
@@ -73,7 +73,7 @@ def pyseudonymize_data(config: TableConfig, data: TableData, all_tables: Dict):
 def build_pseudonym_tables(config: ConfigurationXml, reader: DataReader):
 	# iterate over table_configs
 	Logger.log_info_headline1('generate pseudonym tables')
-	table_configs: Dict = config.get_tables()
+	table_configs: Dict = config.get_all_tables()
 	for tconfig in table_configs.values():
 		Logger.log_info_headline2(tconfig.table_name)
 		table_data: TableData = reader.get_table_by_name(tconfig.table_name)
@@ -86,9 +86,9 @@ def build_pseudonym_tables(config: ConfigurationXml, reader: DataReader):
 			# if pseudonym field has not link (so the table has to be generated), build that pseudonym table
 			if conf.link is None:
 				table_data.build_pseudonym_table(conf.column_names, conf.readable, conf.new_fieldname)
-	pass
 
 
+# executes all data changes
 def manipulate_data(config: ConfigurationXml, reader: DataReader):
 	# check none
 	if config is None:
@@ -101,7 +101,7 @@ def manipulate_data(config: ConfigurationXml, reader: DataReader):
 
 	# iterate over every table in config and apply the configured changes
 	Logger.log_info_headline1('manipulation')
-	table_configs: Dict = config.get_tables()
+	table_configs: Dict = config.get_all_tables()
 	for tconfig in table_configs.values():
 		table_data: TableData = reader.get_table_by_name(tconfig.table_name)
 		Logger.log_info_headline2(tconfig.table_name)
@@ -112,9 +112,9 @@ def manipulate_data(config: ConfigurationXml, reader: DataReader):
 			continue
 		anonymize_data(tconfig, table_data)
 		pyseudonymize_data(tconfig, table_data, reader.get_tables())
-		pass
 
 
+# writes all given data to csv, settings given in configuration
 def write_data_to_csv(config: ConfigurationXml, reader: DataReader):
 	if config is None:
 		return Logger.log_none_type_error('config', 'write_data_to_csv')
@@ -127,18 +127,20 @@ def write_data_to_csv(config: ConfigurationXml, reader: DataReader):
 	file_writer.write_data()
 
 
+# main method of whole project
 if __name__ == '__main__':
 	# read configuration
 	config = ConfigurationXml()
 	if config.read_from_xml() > 0:
-		# if configuration could be loaded, read data from input directory
+		# if configuration could be loaded, create reader and read data from input directory
 		reader = DataReader()
 		reader.read_by_xml_config(config)
 
+		# execute anonymization and pseudonymization for all files
 		manipulate_data(config, reader)
 
+		# show k-anonymity
 		AnonymityTests.k_anonymity(config, reader)
 
+		# write the changed data to the output directory
 		write_data_to_csv(config, reader)
-
-		pass

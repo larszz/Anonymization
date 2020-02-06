@@ -5,7 +5,6 @@ from os import DirEntry
 from typing import List, Dict
 
 import exceptions as ex, logging as log
-import configurations.Configuration_simple as conf
 import objects.TableData as td
 import values as v
 from configurations.ConfigurationXml import ConfigurationXml
@@ -28,7 +27,8 @@ class DataReader:
 		self.tables[table.filename] = table
 
 
-	def readFiles(self, directory):
+	# reads files from the given directory
+	def read_files(self, directory):
 		counter: int = 0
 		# iterate over found files in directory
 		files = os.scandir(directory)
@@ -45,11 +45,11 @@ class DataReader:
 			ex.log.info(f"Reading File:\t{filename.name}")
 
 			with open(filename, 'r') as file:
-				csv_reader = csv.reader(file, delimiter=v.delimiters.csv.PRIMARY, quotechar=v.delimiters.csv.QUOTECHAR)
+				csv_reader = csv.reader(file, delimiter=v.Delimiters.Csv.PRIMARY, quotechar=v.Delimiters.Csv.QUOTECHAR)
 				tabledata = td.TableData(filename.name)
 
 				try:
-					rows = extractLines(csv_reader)
+					rows = extract_lines(csv_reader)
 
 					# set the column names into tabledata object
 					tabledata.set_columnnames(rows[0])
@@ -68,9 +68,10 @@ class DataReader:
 					continue
 
 
+	# reads the directory from the given configuration and executes readFiles(..) with the found directory
 	def read_by_xml_config(self, configuration: ConfigurationXml):
 		directory = configuration.input_directory
-		self.readFiles(directory)
+		self.read_files(directory)
 
 
 	########################################################################
@@ -95,9 +96,10 @@ class DataReader:
 		return self.tables[table_name]
 
 
-def getColumnNames(firstrow):
+# tries to cut the given string into parts by the given primary delimiter
+def get_column_names(firstrow):
 	try:
-		columns: List[str] = str(firstrow).split(v.delimiters.csv.PRIMARY)
+		columns: List[str] = str(firstrow).split(v.Delimiters.Csv.PRIMARY)
 		for x in range(len(columns)):
 			columns[x] = str(columns[x]).strip()
 		return columns
@@ -105,7 +107,8 @@ def getColumnNames(firstrow):
 		return None
 
 
-def extractLines(reader):
+# extracts the rows from a given csv reader and returns them as a list
+def extract_lines(reader):
 	rows = []
 	for r in reader:
 		rows.append(r)

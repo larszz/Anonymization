@@ -23,6 +23,7 @@ class TableData:
 		self.ignore_in_tests = []
 
 
+	# sets the columnnames, if they are not already set
 	def set_columnnames(self, columnnames: list):
 		if not (self.column_names is None):
 			return Logger.log_already_set('Columnnames')
@@ -64,11 +65,12 @@ class TableData:
 				except IndexError as ie:
 					log.warning('{0}\nidxRow: {1}\tidxCol: {2}'.format(ie, str(idxRow), str(idxCol)))
 					continue
-
 			self.add_dataset(dataset)
-
 		return 1
 
+
+	################################################################################
+	# ANONYMIZATION ################################################################
 
 	# anonymizes one given column;
 	# if pattern is set: tries to change the column value depending on the pattern
@@ -103,6 +105,9 @@ class TableData:
 		return error_count
 
 
+	################################################################################
+	# PSEUDONYMIZATION #############################################################
+
 	# combines multiple given fields into one column, representing the previous values by a pseudonym
 	# i.e. pseudonymize a city and its plz by one pseudonym
 	def pseudonymize_many(self, columnnames: List[str], pseudonym_table=None,
@@ -121,7 +126,7 @@ class TableData:
 
 		# build pseudonym table
 		if pseudonym_table is None:
-			pseudonym_table = self.get_pseudonym_table_from_fieldnames(columnnames)
+			pseudonym_table = self.get_pseudonym_table_from_columnnames(columnnames)
 			if pseudonym_table is None:
 				return -1
 
@@ -134,7 +139,7 @@ class TableData:
 
 		# edit filenames in tabledata
 		self.remove_columnnames(columnnames)
-		self.add_fieldname(new_field_name)
+		self.add_columnname(new_field_name)
 
 		Logger.log_info_replaced_column_names(self.filename, columnnames, new_field_name)
 		Logger.log_info_table_manipulation_finished(error_count)
@@ -151,7 +156,7 @@ class TableData:
 
 		# if no pseudonym table is given, try to get own previously (hopefully) generated pseudonym table
 		if pseudonym_table is None:
-			pseudonym_table = self.get_pseudonym_table_from_fieldnames([columnname])
+			pseudonym_table = self.get_pseudonym_table_from_columnnames([columnname])
 			if pseudonym_table is None:
 				return ErrorValues.NONETYPE
 		elif not isinstance(pseudonym_table, PseudonymTable.PseudonymTable):
@@ -210,7 +215,7 @@ class TableData:
 		return 1
 
 
-	def add_fieldname(self, filename: str):
+	def add_columnname(self, filename: str):
 		if filename is None:
 			return Logger.log_none_type_error('filename')
 		self.column_names.append(filename)
@@ -222,7 +227,7 @@ class TableData:
 	def long_string(self):
 		output = ""
 		output += f"Filename: {str(self.filename)}\n"
-		output += h.listToString(self.column_names, 'Column names') + '\n'
+		output += h.list_to_string(self.column_names, 'Column names') + '\n'
 
 		for d in self.datasets:
 			output += str(d) + '\n'
@@ -232,12 +237,12 @@ class TableData:
 	#####################################################################
 	# GETTER ############################################################
 	# returns the a pseudonym table, specified by the given columnnames
-	def get_pseudonym_table_from_fieldnames(self, fieldnames: List):
-		if fieldnames is None:
+	def get_pseudonym_table_from_columnnames(self, columnnames: List):
+		if columnnames is None:
 			Logger.log_none_type_error('columnnames')
 			return None
 
-		key = common.generate_dict_key(fieldnames)
+		key = common.generate_dict_key(columnnames)
 		if key not in self.pseudonym_tables:
 			Logger.log_key_not_found_error(str(key), 'pseudonym_tables', self.filename)
 			return None

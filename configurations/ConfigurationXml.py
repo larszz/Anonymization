@@ -38,7 +38,7 @@ class ColAnonymConfig(object):
 		return output
 
 
-# stores a table link
+# stores a table link with the linked file and its referenced column
 class LinkConfig(object):
 	table_name: str
 	table_columns: List[str]
@@ -115,10 +115,6 @@ class ColPseudonymConfig(object):
 		return output
 
 
-##########################################################################
-# GETTER #################################################################
-
-
 # stores whole information about table configuration
 class TableConfig(object):
 	table_name: str
@@ -136,6 +132,8 @@ class TableConfig(object):
 		self.ignore_in_test = []
 
 
+	###########################################################################################
+	# ADDER ###################################################################################
 	def add_anonymize(self, new_config: ColAnonymConfig):
 		if new_config is None:
 			return Logger.log_none_type_error('new_config')
@@ -148,15 +146,14 @@ class TableConfig(object):
 		self.pseudonymize.append(new_config)
 
 
-	##########################################################################
-	# ADDER ##################################################################
 	def add_column_to_ignore(self, column_name: str):
 		if column_name is None:
 			return -1
 		self.ignore_in_test.append(str(column_name))
 
 
-	# GETTER #################################################################
+	###########################################################################################
+	# GETTER ##################################################################################
 	def get_anonymize(self):
 		if self.anonymize is None:
 			Logger.log_none_type_error('self.anonymize')
@@ -179,7 +176,7 @@ class TableConfig(object):
 			log.info(str(p))
 
 
-# stores the whole configuration
+# stores the whole information of a read configuration
 class ConfigurationXml:
 	input_directory: str
 	output_directory: str
@@ -194,7 +191,7 @@ class ConfigurationXml:
 
 	# constructor reads config from xml
 	def read_from_xml(self, config_directory_path: str = None):
-		from values import xml_tags as xt
+		from values import XmlTags as xt
 
 		Logger.log_info_headline1('configuration reading')
 
@@ -221,15 +218,15 @@ class ConfigurationXml:
 			Logger.log_too_many_found_in_xml(xt.OUTPUT_DIR, 1, len(e_output_dir))
 		self.output_directory = e_output_dir[0].text
 
-		# #########################################################################################
-		# get all TABLES
+		###########################################################################################
+		# GET ALL TABLES
 		e_tables: List[Element] = configuration.findall(xt.TABLE)
 		if len(e_tables) < 1:
 			return Logger.log_not_found_in_xml(xt.TABLE, True)
 
 		e_table: Element
 		for e_table in e_tables:
-			# get TABLE NAME
+			# get table name
 			if xt.TABLENAME in e_table.attrib:
 				a_name = e_table.attrib[xt.TABLENAME]
 			else:
@@ -237,7 +234,8 @@ class ConfigurationXml:
 				continue
 
 			config_table: TableConfig = TableConfig(a_name)
-			# #########################################################################################
+
+			###########################################################################################
 			# ANONYMIZATION COLUMNS ###################################################################
 			# get columns_anonym elements (should be exactly one)
 			e_col_anonym: List[Element] = e_table.findall(xt.COLUMNS_ANONYM)
@@ -301,7 +299,7 @@ class ConfigurationXml:
 
 						config_table.add_anonymize(config_anonym_col)
 
-			# #########################################################################################
+			###########################################################################################
 			# PSEUDONYMIZATION COLUMNS ################################################################
 			e_to_pseudonymize: List[Element] = e_table.findall(xt.COLUMNS_PSEUDONYM)
 
@@ -373,8 +371,8 @@ class ConfigurationXml:
 
 						config_table.add_pseudonymize(config_pseudonym_col)
 
-			# #########################################################################################
-			### READ IGNORE IN TEST ###################################################################
+			###########################################################################################
+			### READ IGNORE_IN_TEST ###################################################################
 			e_ignore: List[Element] = e_table.findall(xt.IGNORE_IN_TESTS)
 
 			# skip if no entry found
@@ -398,9 +396,9 @@ class ConfigurationXml:
 		return 1
 
 
-	# GETTER #################################################################
-	# ########################################################################
-	def get_tables(self) -> Dict:
+	###########################################################################################
+	# GETTER ##################################################################################
+	def get_all_tables(self) -> Dict:
 		if self.tables is None:
 			Logger.log_none_type_error('tables')
 			return {}
@@ -413,8 +411,8 @@ class ConfigurationXml:
 			Logger.log_none_type_error('name')
 			return None
 
-		if name in self.get_tables():
+		if name in self.get_all_tables():
 			Logger.log_key_not_found_error(name, 'XML Configuration')
 			return None
 
-		return self.get_tables()[name]
+		return self.get_all_tables()[name]

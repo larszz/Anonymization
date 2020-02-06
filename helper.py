@@ -4,11 +4,11 @@ import os
 import pprint
 
 
-def printList(list, headline='', seperator=', '):
-	print(listToString(list, headline, seperator))
+def print_list(list, headline='', seperator=', '):
+	print(list_to_string(list, headline, seperator))
 
 
-def listToString(list, headline='', seperator=', ', headlineseperator='\n'):
+def list_to_string(list, headline='', seperator=', ', headlineseperator='\n'):
 	output = ''
 	# add headline
 	if (headline != ''):
@@ -23,7 +23,7 @@ def listToString(list, headline='', seperator=', ', headlineseperator='\n'):
 	return output
 
 
-def printList2D(list, headline='', seperator=',\t'):
+def print_list_2d(list, headline='', seperator=',\t'):
 	output = ''
 	if headline != '':
 		output += headline + '\n'
@@ -38,14 +38,15 @@ def printList2D(list, headline='', seperator=',\t'):
 	print(output)
 	pprint.pprint(list)
 
-def stripList(list):
+
+def strip_list(list):
 	new_list = []
 	for l in list:
 		new_list.append(str(l).strip())
 	return new_list
 
 
-def dictToString(dict, headline=''):
+def dict_to_string(dict, headline=''):
 	try:
 		output = ""
 		if headline != '':
@@ -55,6 +56,3 @@ def dictToString(dict, headline=''):
 		output += 3 * '\n'
 	except Exception as ex:
 		log.warning('An Exception occured!')
-
-
-

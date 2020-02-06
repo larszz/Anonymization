@@ -1,4 +1,4 @@
-class conf:
+class ConfigValues:
 	DIRECTORY = 'directory'
 	OUTPUTDIRECTORY = 'output'
 	TABLE = 'table'
@@ -7,16 +7,19 @@ class conf:
 	PSEUDONYM = 'pseudonym'
 
 
-class delimiters:
-	class csv:
+class Delimiters:
+	class Csv:
 		PRIMARY = ';'
 		SECONDARIES = [',', ';']
 		QUOTECHAR = '"'
-	class files:
+
+
+
+	class Files:
 		PSEUDOTABLE_DELIMITER = '__'
 
 
-class xml_tags:
+class XmlTags:
 	DELETE = 'delete'
 	INPUT_DIR = 'inputdirectory'
 	OUTPUT_DIR = 'outputdirectory'
@@ -38,10 +41,10 @@ class xml_tags:
 	IGNORE_IN_TESTS = 'ignore_in_tests'
 
 
-class filenames:
+class Filenames:
 	DATA = 'Data'
 	PSEUDONYM_TABLES = 'PseudonymTables'
 
 
-class filesuffix:
+class Filesuffix:
 	CSV = '.csv'

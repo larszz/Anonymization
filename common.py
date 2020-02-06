@@ -8,10 +8,12 @@ import values
 from exceptions import Logger
 
 
+# returns a random hex value
 def get_random_hex(length=8):
 	return str(binascii.b2a_hex(os.urandom(length)))
 
 
+# returns a random column value for anonymization
 def get_random_colval():
 	return str(get_random_hex(5))
 
@@ -31,6 +33,7 @@ def generate_dict_key(keys) -> tuple:
 	return to_tuple(keys)
 
 
+# is called recursively, to generate a working dictionary key from a given structure (might be a list or nested lists)
 def to_tuple(value):
 	if value is None:
 		Logger.log_none_type_error('value', 'common.to_tuple')
@@ -46,6 +49,7 @@ def to_tuple(value):
 		return str(value)
 
 
+# generates a field name with the given filenames
 def generate_combined_field_name(fieldnames: List[str]):
 	if fieldnames is None:
 		return Logger.log_none_type_error('columnnames')
@@ -56,6 +60,9 @@ def generate_combined_field_name(fieldnames: List[str]):
 	output = output.replace(' ', '')
 	return output
 
+
+################################################################################
+# TIME #########################################################################
 
 def get_current_time() -> str:
 	now = datetime.now()
@@ -69,5 +76,5 @@ def get_filename_with_time(filename: str):
 	return f"{get_current_time()}__{filename}"
 
 
-def get_pseudonymtable_filename(filename:str):
-	return ''+filename+values.filesuffix.CSV
+def get_pseudonymtable_filename(filename: str):
+	return '' + filename + values.Filesuffix.CSV
