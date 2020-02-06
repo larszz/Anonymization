@@ -7,12 +7,18 @@
 			<column readable="true">
 				<name>EmployeeNr</name>
 			</column>
+			<column readable="true">
+				<name>location</name>
+			</column>
+			<column readable="true">
+				<name>EmployeeType</name>
+			</column>
 		</columns_pseudonym>
 		<columns_anonym>
 			<column delete="true">
 				<name>givenName</name>
 			</column>
-			<column delete="true">
+			<column>
 				<name>lastName</name>
 			</column>
 			<column delete="true">
@@ -22,55 +28,77 @@
 				<name>privateNumber</name>
 			</column>
 		</columns_anonym>
-		<ignore_in_tests>
-			<column>EmployeeNr</column>
-			<column>givenName</column>
-			<column>lastName</column>
-			<column>EmployeeType</column>
-			<column>departmentalHead</column>
-		</ignore_in_tests>
+
 	</table>
-	<table tablename="AD_orig.csv">
+	<table tablename="AD.csv">
 		<columns_anonym>
-			<column>
+			<column delete="true">
+				<name>DN</name>
+			</column>
+			<column delete="true">
 				<name>sAMAccountName</name>
-				<pattern>
-					<front>2</front>
-					<end>2</end>
-				</pattern>
 			</column>
 			<column delete="true">
 				<name>givenName</name>
 			</column>
-			<column>
-				<name>lastLogon</name>
-				<pattern>
-					<end>4</end>
-				</pattern>
+			<column delete="true">
+				<name>lastName</name>
 			</column>
 		</columns_anonym>
 		<columns_pseudonym>
-			<column id="1">
+			<column readable="true">
 				<name>EmployeeNr</name>
 				<link>
 					<link_table>HR.csv</link_table>
 					<link_field>EmployeeNr</link_field>
 				</link>
 			</column>
-			<column id="2">
+			<column readable="true">
 				<name>location</name>
-				<name>memberof</name>
-				<newfieldname>CombinedField</newfieldname>
-			</column>
-			<column readable="false">
-				<name>accountType</name>
+				<link>
+					<link_table>HR.csv</link_table>
+					<link_field>location</link_field>
+				</link>
 			</column>
 		</columns_pseudonym>
-		<ignore_in_tests>
-			<column>EmployeeNr</column>
-			<column>xyz</column>
-		</ignore_in_tests>
-
 	</table>
+	<table tablename="Org.csv">
+		<columns_pseudonym>
+			<column readable="true">
+				<name>Name</name>
+			</column>
+		</columns_pseudonym>
+	</table>
+	<table tablename="SAP_Marketing_Usage_Stats.csv">
+		<columns_pseudonym>
+			<column readable="true">
+				<name>Account</name>
+				<link>
+					<link_table>HR.csv</link_table>
+					<link_field>EmployeeNr</link_field>
+				</link>
+			</column>
+		</columns_pseudonym>
+	</table>
+	<table tablename="SAP_Marketing_Users_Small.csv">
+		<columns_anonym>
+			<column delete="true">
+				<name>Lastname</name>
+			</column>
+			<column delete="true">
+				<name>Firstname</name>
+			</column>
+		</columns_anonym>
+		<columns_pseudonym>
+			<column readable="true">
+				<name>Username</name>
+				<link>
+					<link_table>HR.csv</link_table>
+					<link_field>EmployeeNr</link_field>
+				</link>
+			</column>
+		</columns_pseudonym>
+	</table>
+
 
 </configuration>
