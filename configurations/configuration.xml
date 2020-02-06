@@ -1,0 +1,104 @@
+<!--new configuration structure to make more detailed configuration possible-->
+<configuration>
+	<inputdirectory>D:\Projects\Anonymization\Datenschutz-IAM</inputdirectory>
+	<outputdirectory>D:\Projects\Anonymization\OUTPUT</outputdirectory>
+	<table tablename="HR.csv">
+		<columns_pseudonym>
+			<column readable="true">
+				<name>EmployeeNr</name>
+			</column>
+			<column readable="true">
+				<name>location</name>
+			</column>
+			<column readable="true">
+				<name>EmployeeType</name>
+			</column>
+		</columns_pseudonym>
+		<columns_anonym>
+			<column delete="true">
+				<name>givenName</name>
+			</column>
+			<column>
+				<name>lastName</name>
+			</column>
+			<column delete="true">
+				<name>mailAddress</name>
+			</column>
+			<column delete="true">
+				<name>privateNumber</name>
+			</column>
+		</columns_anonym>
+
+	</table>
+	<table tablename="AD.csv">
+		<columns_anonym>
+			<column delete="true">
+				<name>DN</name>
+			</column>
+			<column delete="true">
+				<name>sAMAccountName</name>
+			</column>
+			<column delete="true">
+				<name>givenName</name>
+			</column>
+			<column delete="true">
+				<name>lastName</name>
+			</column>
+		</columns_anonym>
+		<columns_pseudonym>
+			<column readable="true">
+				<name>EmployeeNr</name>
+				<link>
+					<link_table>HR.csv</link_table>
+					<link_field>EmployeeNr</link_field>
+				</link>
+			</column>
+			<column readable="true">
+				<name>location</name>
+				<link>
+					<link_table>HR.csv</link_table>
+					<link_field>location</link_field>
+				</link>
+			</column>
+		</columns_pseudonym>
+	</table>
+	<table tablename="Org.csv">
+		<columns_pseudonym>
+			<column readable="true">
+				<name>Name</name>
+			</column>
+		</columns_pseudonym>
+	</table>
+	<table tablename="SAP_Marketing_Usage_Stats.csv">
+		<columns_pseudonym>
+			<column readable="true">
+				<name>Account</name>
+				<link>
+					<link_table>HR.csv</link_table>
+					<link_field>EmployeeNr</link_field>
+				</link>
+			</column>
+		</columns_pseudonym>
+	</table>
+	<table tablename="SAP_Marketing_Users_Small.csv">
+		<columns_anonym>
+			<column delete="true">
+				<name>Lastname</name>
+			</column>
+			<column delete="true">
+				<name>Firstname</name>
+			</column>
+		</columns_anonym>
+		<columns_pseudonym>
+			<column readable="true">
+				<name>Username</name>
+				<link>
+					<link_table>HR.csv</link_table>
+					<link_field>EmployeeNr</link_field>
+				</link>
+			</column>
+		</columns_pseudonym>
+	</table>
+
+
+</configuration>

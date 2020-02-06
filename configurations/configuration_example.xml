@@ -1,0 +1,72 @@
+<!--new configuration structure to make more detailed configuration possible-->
+<configuration>
+	<inputdirectory>D:\Projects\Anonymization\Datenschutz-IAM</inputdirectory>
+	<outputdirectory>[OUTPUT-DIRECTORY-PATH]</outputdirectory>
+	<table tablename="SAP_Marketing_Usage_Stats.csv">
+		<columns_anonym>
+			<column>
+				<name>SAP Permission</name>
+				<pattern>
+					<front>2</front>
+					<end>2</end>
+				</pattern>
+			</column>
+			<column>
+				<name>column2</name>
+			</column>
+		</columns_anonym>
+		<columns_pseudonym>
+			<column id="1">
+				<name>column3</name>
+				<link>
+					<link_table>Org.csv</link_table>
+					<link_field>EmployeeNumber</link_field>
+				</link>
+			</column>
+			<column id="2">
+				<name>column4</name>
+				<name>column5</name>
+				<newfieldname>CombinedField</newfieldname>
+			</column>
+			<column readable="false">
+				<name>column6</name>
+			</column>
+		</columns_pseudonym>
+
+	</table>
+
+    <table tablename="table2">
+		<columns_anonym>
+			<column>
+				<name>column1</name>
+				<pattern>
+					<front>2</front>
+					<end>2</end>
+					<between>1</between>
+				</pattern>
+			</column>
+			<column>
+				<name>column2</name>
+			</column>
+		</columns_anonym>
+		<columns_pseudonym>
+			<column>
+				<name>column3</name>
+				<link>
+					<link_table>HV.csv</link_table>
+					<link_field>EmployeeNumber</link_field>
+				</link>
+			</column>
+			<column>
+				<name>column4</name>
+				<name>column5</name>
+				<newfieldname>CombinedField</newfieldname>
+			</column>
+			<column readable="true">
+				<name>column6</name>
+			</column>
+		</columns_pseudonym>
+
+	</table>
+
+</configuration>
