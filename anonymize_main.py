@@ -1,3 +1,4 @@
+from time import sleep
 from typing import List, Dict
 
 import AnonymityTests
@@ -144,3 +145,6 @@ if __name__ == '__main__':
 
 		# write the changed data to the output directory
 		write_data_to_csv(config, reader)
+
+		sleep(3)
+		input("Press Enter to close window...")
